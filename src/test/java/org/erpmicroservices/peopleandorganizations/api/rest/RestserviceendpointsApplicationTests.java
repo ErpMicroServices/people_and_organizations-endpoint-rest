@@ -1,4 +1,4 @@
-package org.erpmicroservices.peopleandorganizations.service.endpoints.rest;
+package org.erpmicroservices.peopleandorganizations.api.rest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,13 +1,12 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/people_and_organizations
-    username: people_and_organizations
-    password: people_and_organizations
+    username: people_and_organizations-database
+    password: people_and_organizations-database
   jpa:
     hibernate:
-      ddl-auto: create-drop
-  application:
-    name: PeopleAndOrganizationsServiceEndpointRest
-    admin:
-      enabled: true
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 

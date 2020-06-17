@@ -1,7 +1,6 @@
-package org.erpmicroservices.peopleandorganizations.service.endpoints.rest.repositories;
+package org.erpmicroservices.peopleandorganizations.api.rest.repositories;
 
-
-import org.erp_microservices.people_and_organizations.models.party.model.Party;
+import org.erpmicroservices.peopleandorganizations.api.rest.models.Party;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
