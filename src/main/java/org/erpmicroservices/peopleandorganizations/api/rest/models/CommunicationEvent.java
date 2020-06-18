@@ -4,11 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "communication_event")
@@ -29,7 +28,8 @@ public class CommunicationEvent extends AbstractPersistable<UUID> {
  private ContactMechanismType contactMechanismType;
 
  @ManyToOne
- private PartyRelationship partyRelationship;
+ @JoinColumn(name = "party_relationship_id")
+ private PartyRelationship relationship;
 
  @ManyToOne
  @JoinColumn(name = "communication_event_status_type_id")
@@ -43,68 +43,68 @@ public class CommunicationEvent extends AbstractPersistable<UUID> {
  @JoinColumn(name = "case_id")
  private Case aCase;
 
+ @OneToMany
+ @JoinColumn(name = "communication_event_id")
+ private List<CommunicationEventPurpose> purposes = new ArrayList<>();
+
+ @OneToMany
+ @JoinColumn(name = "communication_event_id")
+ private List<CommunicationEventRole> roles = new ArrayList<>();
+
  public LocalDateTime getStarted() {
-  return started;
+	return started;
  }
 
  public void setStarted(LocalDateTime started) {
-  this.started = started;
+	this.started = started;
  }
 
  public LocalDateTime getEnded() {
-  return ended;
+	return ended;
  }
 
  public void setEnded(LocalDateTime ended) {
-  this.ended = ended;
+	this.ended = ended;
  }
 
  public String getNote() {
-  return note;
+	return note;
  }
 
  public void setNote(String note) {
-  this.note = note;
+	this.note = note;
  }
 
  public ContactMechanismType getContactMechanismType() {
-  return contactMechanismType;
+	return contactMechanismType;
  }
 
  public void setContactMechanismType(ContactMechanismType contactMechanismType) {
-  this.contactMechanismType = contactMechanismType;
- }
-
- public PartyRelationship getPartyRelationship() {
-  return partyRelationship;
- }
-
- public void setPartyRelationship(PartyRelationship partyRelationship) {
-  this.partyRelationship = partyRelationship;
+	this.contactMechanismType = contactMechanismType;
  }
 
  public CommunicationEventStatusType getStatusType() {
-  return statusType;
+	return statusType;
  }
 
  public void setStatusType(CommunicationEventStatusType statusType) {
-  this.statusType = statusType;
+	this.statusType = statusType;
  }
 
  public CommunicationEventType getType() {
-  return type;
+	return type;
  }
 
  public void setType(CommunicationEventType type) {
-  this.type = type;
+	this.type = type;
  }
 
 
  public Case getaCase() {
-  return aCase;
+	return aCase;
  }
 
  public void setaCase(Case aCase) {
-  this.aCase = aCase;
+	this.aCase = aCase;
  }
 }
