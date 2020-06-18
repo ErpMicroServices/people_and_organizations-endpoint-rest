@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/people_and_organizations
-    username: people_and_organizations-database
-    password: people_and_organizations-database
+    username: people_and_organizations
+    password: people_and_organizations
   jpa:
     hibernate:
       ddl-auto: validate
