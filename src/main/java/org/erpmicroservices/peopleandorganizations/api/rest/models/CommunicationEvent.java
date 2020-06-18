@@ -51,12 +51,16 @@ public class CommunicationEvent extends AbstractPersistable<UUID> {
  @JoinColumn(name = "communication_event_id")
  private List<CommunicationEventRole> roles = new ArrayList<>();
 
+ @OneToMany
+ @JoinColumn(name = "communication_event_id")
+ private List<CommunicationEventWorkEffort> effort = new ArrayList<>();
+
  public LocalDateTime getStarted() {
-	return started;
+  return started;
  }
 
  public void setStarted(LocalDateTime started) {
-	this.started = started;
+  this.started = started;
  }
 
  public LocalDateTime getEnded() {
