@@ -4,18 +4,18 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity(name = "party_classification")
+@Table(name = "party_classification")
 public class PartyClassification extends AbstractPersistable<UUID> {
 
  @ManyToOne
+ @JoinColumn(name = "party_classification_type_id")
  @NotNull
  private PartyClassificationType type;
 
