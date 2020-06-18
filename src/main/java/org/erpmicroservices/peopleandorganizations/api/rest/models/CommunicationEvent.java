@@ -41,7 +41,7 @@ public class CommunicationEvent extends AbstractPersistable<UUID> {
 
  @ManyToOne
  @JoinColumn(name = "case_id")
- private Case kase;
+ private Case aCase;
 
  public LocalDateTime getStarted() {
   return started;
@@ -99,11 +99,12 @@ public class CommunicationEvent extends AbstractPersistable<UUID> {
   this.type = type;
  }
 
- public Case getKase() {
-  return kase;
+
+ public Case getaCase() {
+  return aCase;
  }
 
- public void setKase(Case kase) {
-  this.kase = kase;
+ public void setaCase(Case aCase) {
+  this.aCase = aCase;
  }
 }
