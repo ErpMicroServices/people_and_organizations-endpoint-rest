@@ -21,4 +21,36 @@ public class Case extends AbstractPersistable<UUID> {
  @ManyToOne
  @JoinColumn(name = "case_status_type_id")
  private CaseStatusType caseStatus;
+
+ public String getDescription() {
+  return description;
+ }
+
+ public void setDescription(String description) {
+  this.description = description;
+ }
+
+ public LocalDateTime getStartedAt() {
+  return startedAt;
+ }
+
+ public void setStartedAt(LocalDateTime startedAt) {
+  this.startedAt = startedAt;
+ }
+
+ public CaseType getType() {
+  return type;
+ }
+
+ public void setType(CaseType type) {
+  this.type = type;
+ }
+
+ public CaseStatusType getCaseStatus() {
+  return caseStatus;
+ }
+
+ public void setCaseStatus(CaseStatusType caseStatus) {
+  this.caseStatus = caseStatus;
+ }
 }

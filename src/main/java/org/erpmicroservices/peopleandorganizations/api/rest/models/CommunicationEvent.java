@@ -42,4 +42,68 @@ public class CommunicationEvent extends AbstractPersistable<UUID> {
  @ManyToOne
  @JoinColumn(name = "case_id")
  private Case kase;
+
+ public LocalDateTime getStarted() {
+  return started;
+ }
+
+ public void setStarted(LocalDateTime started) {
+  this.started = started;
+ }
+
+ public LocalDateTime getEnded() {
+  return ended;
+ }
+
+ public void setEnded(LocalDateTime ended) {
+  this.ended = ended;
+ }
+
+ public String getNote() {
+  return note;
+ }
+
+ public void setNote(String note) {
+  this.note = note;
+ }
+
+ public ContactMechanismType getContactMechanismType() {
+  return contactMechanismType;
+ }
+
+ public void setContactMechanismType(ContactMechanismType contactMechanismType) {
+  this.contactMechanismType = contactMechanismType;
+ }
+
+ public PartyRelationship getPartyRelationship() {
+  return partyRelationship;
+ }
+
+ public void setPartyRelationship(PartyRelationship partyRelationship) {
+  this.partyRelationship = partyRelationship;
+ }
+
+ public CommunicationEventStatusType getStatusType() {
+  return statusType;
+ }
+
+ public void setStatusType(CommunicationEventStatusType statusType) {
+  this.statusType = statusType;
+ }
+
+ public CommunicationEventType getType() {
+  return type;
+ }
+
+ public void setType(CommunicationEventType type) {
+  this.type = type;
+ }
+
+ public Case getKase() {
+  return kase;
+ }
+
+ public void setKase(Case kase) {
+  this.kase = kase;
+ }
 }

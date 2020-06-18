@@ -43,4 +43,67 @@ public class PartyRelationship extends AbstractPersistable<UUID> {
  @JoinColumn(name = "party_relationship_id")
  private List<CommunicationEvent> communicationEvents = new ArrayList<>();
 
+ public LocalDate getFromDate() {
+  return fromDate;
+ }
+
+ public void setFromDate(LocalDate fromDate) {
+  this.fromDate = fromDate;
+ }
+
+ public LocalDate getThruDate() {
+  return thruDate;
+ }
+
+ public void setThruDate(LocalDate thruDate) {
+  this.thruDate = thruDate;
+ }
+
+ public String getComment() {
+  return comment;
+ }
+
+ public void setComment(String comment) {
+  this.comment = comment;
+ }
+
+ public PartyRole getFromPartyRole() {
+  return fromPartyRole;
+ }
+
+ public void setFromPartyRole(PartyRole fromPartyRole) {
+  this.fromPartyRole = fromPartyRole;
+ }
+
+ public PartyRole getToPartyRole() {
+  return toPartyRole;
+ }
+
+ public void setToPartyRole(PartyRole toPartyRole) {
+  this.toPartyRole = toPartyRole;
+ }
+
+ public PartyRelationshipType getType() {
+  return type;
+ }
+
+ public void setType(PartyRelationshipType type) {
+  this.type = type;
+ }
+
+ public PriorityType getPriority() {
+  return priority;
+ }
+
+ public void setPriority(PriorityType priority) {
+  this.priority = priority;
+ }
+
+ public List<CommunicationEvent> getCommunicationEvents() {
+  return communicationEvents;
+ }
+
+ public void setCommunicationEvents(List<CommunicationEvent> communicationEvents) {
+  this.communicationEvents = communicationEvents;
+ }
 }
