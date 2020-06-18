@@ -26,6 +26,30 @@ public class Party extends AbstractPersistable<UUID> {
  @JoinColumn(name = "party_id")
  private List<PartyContactMechanism> contactMechanisms = new ArrayList<>();
 
+ @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+ @JoinColumn(name = "party_id")
+ private List<PartyName> names = new ArrayList<>();
+
+ @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+ @JoinColumn(name = "party_id")
+ private List<PartyName> identifications = new ArrayList<>();
+
+ public List<PartyName> getNames() {
+  return names;
+ }
+
+ public void setNames(List<PartyName> names) {
+  this.names = names;
+ }
+
+ public List<PartyName> getIdentifications() {
+  return identifications;
+ }
+
+ public void setIdentifications(List<PartyName> identifications) {
+  this.identifications = identifications;
+ }
+
  public PartyType getType() {
   return type;
  }
@@ -57,4 +81,5 @@ public class Party extends AbstractPersistable<UUID> {
  public void setContactMechanisms(List<PartyContactMechanism> contactMechanisms) {
   this.contactMechanisms = contactMechanisms;
  }
+
 }

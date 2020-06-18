@@ -56,11 +56,11 @@ public class CommunicationEvent extends AbstractPersistable<UUID> {
  private List<CommunicationEventWorkEffort> effort = new ArrayList<>();
 
  public LocalDateTime getStarted() {
-  return started;
+	return started;
  }
 
  public void setStarted(LocalDateTime started) {
-  this.started = started;
+	this.started = started;
  }
 
  public LocalDateTime getEnded() {
@@ -110,5 +110,37 @@ public class CommunicationEvent extends AbstractPersistable<UUID> {
 
  public void setaCase(Case aCase) {
 	this.aCase = aCase;
+ }
+
+ public PartyRelationship getRelationship() {
+	return relationship;
+ }
+
+ public void setRelationship(PartyRelationship relationship) {
+	this.relationship = relationship;
+ }
+
+ public List<CommunicationEventPurpose> getPurposes() {
+	return purposes;
+ }
+
+ public void setPurposes(List<CommunicationEventPurpose> purposes) {
+	this.purposes = purposes;
+ }
+
+ public List<CommunicationEventRole> getRoles() {
+	return roles;
+ }
+
+ public void setRoles(List<CommunicationEventRole> roles) {
+	this.roles = roles;
+ }
+
+ public List<CommunicationEventWorkEffort> getEffort() {
+	return effort;
+ }
+
+ public void setEffort(List<CommunicationEventWorkEffort> effort) {
+	this.effort = effort;
  }
 }

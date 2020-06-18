@@ -16,4 +16,20 @@ public class ContactMechanismGeographicBoundary extends AbstractPersistable<UUID
  @ManyToOne
  @JoinColumn(name = "geographic_boundary_id")
  private GeographicBoundary geographBoundary;
+
+ public ContactMechanism getContactMechanism() {
+	return contactMechanism;
+ }
+
+ public void setContactMechanism(ContactMechanism contactMechanism) {
+	this.contactMechanism = contactMechanism;
+ }
+
+ public GeographicBoundary getGeographBoundary() {
+	return geographBoundary;
+ }
+
+ public void setGeographBoundary(GeographicBoundary geographBoundary) {
+	this.geographBoundary = geographBoundary;
+ }
 }

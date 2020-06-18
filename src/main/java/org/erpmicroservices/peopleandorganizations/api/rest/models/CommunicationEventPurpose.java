@@ -18,4 +18,20 @@ public class CommunicationEventPurpose extends AbstractPersistable<UUID> {
  @ManyToOne
  @JoinColumn(name = "communication_event_purpose_type_id")
  private CommunicationEventPurposeType type;
+
+ public String getDescription() {
+	return description;
+ }
+
+ public void setDescription(String description) {
+	this.description = description;
+ }
+
+ public CommunicationEventPurposeType getType() {
+	return type;
+ }
+
+ public void setType(CommunicationEventPurposeType type) {
+	this.type = type;
+ }
 }

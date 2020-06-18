@@ -11,4 +11,12 @@ public class CommunicationEventWorkEffort extends AbstractPersistable<UUID> {
 
  @Column(name = "work_effort_id")
  private UUID workEffortId;
+
+ public UUID getWorkEffortId() {
+	return workEffortId;
+ }
+
+ public void setWorkEffortId(UUID workEffortId) {
+	this.workEffortId = workEffortId;
+ }
 }

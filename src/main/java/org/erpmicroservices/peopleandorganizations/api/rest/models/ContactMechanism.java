@@ -44,4 +44,5 @@ public class ContactMechanism extends AbstractPersistable<UUID> {
  public void setType(ContactMechanismType type) {
   this.type = type;
  }
+
 }
