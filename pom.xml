@@ -18,7 +18,7 @@
         </connection>
         <developerConnection>scm:git:ssh://git@github.com:ErpMicroServices/people_and_organizations-endpoint-rest.git
         </developerConnection>
-        <url>scm:git:ssh://git@github.com:ErpMicroServices/people_and_organizations-endpoint-rest.git</url>
+        <url>scm:git:ssh://git@github.com/ErpMicroServices/people_and_organizations-endpoint-rest.git</url>
         <tag>people_and_organizations-api-rest-1.0.0</tag>
     </scm>
     <properties>
