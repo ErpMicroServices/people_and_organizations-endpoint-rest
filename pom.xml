@@ -10,7 +10,7 @@
     </parent>
     <groupId>org.erpmicroservices.people_and_organizations.api.rest</groupId>
     <artifactId>people_and_organizations-api-rest</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>People and Organizations Service Restful Endpoint</name>
     <description>A restful HATEOAS based API for handling data about people and organizations.</description>
