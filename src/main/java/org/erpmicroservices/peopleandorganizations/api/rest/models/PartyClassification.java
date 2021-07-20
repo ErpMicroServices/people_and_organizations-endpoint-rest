@@ -1,6 +1,8 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -12,6 +14,9 @@ import java.util.UUID;
 
 @Entity(name = "party_classification")
 @Table(name = "party_classification")
+@Data
+@Builder
+
 public class PartyClassification extends AbstractPersistable<UUID> {
 
  @ManyToOne

@@ -1,5 +1,7 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.Entity;
@@ -9,6 +11,9 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Entity
+@Data
+@Builder
+
 public class PartyContactMechanismPurposeType extends AbstractPersistable<UUID> {
 
  @NotBlank
@@ -17,21 +22,5 @@ public class PartyContactMechanismPurposeType extends AbstractPersistable<UUID> 
 
  @ManyToOne
  private CaseRoleType parent;
-
- public String getDescription() {
-	return description;
- }
-
- public void setDescription(String description) {
-	this.description = description;
- }
-
- public CaseRoleType getParent() {
-	return parent;
- }
-
- public void setParent(CaseRoleType parent) {
-	this.parent = parent;
- }
 
 }

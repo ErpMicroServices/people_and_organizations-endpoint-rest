@@ -1,5 +1,7 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.Entity;
@@ -8,6 +10,9 @@ import javax.persistence.ManyToOne;
 import java.util.UUID;
 
 @Entity(name = "facility_role")
+@Data
+@Builder
+
 public class FacitlityRole extends AbstractPersistable<UUID> {
 
  @ManyToOne

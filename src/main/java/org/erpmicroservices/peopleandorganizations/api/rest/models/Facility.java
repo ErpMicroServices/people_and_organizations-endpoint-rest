@@ -1,5 +1,7 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.Entity;
@@ -13,6 +15,9 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "facility")
+@Data
+@Builder
+
 public class Facility extends AbstractPersistable<UUID> {
  @NotBlank
  @NotNull
@@ -36,51 +41,4 @@ public class Facility extends AbstractPersistable<UUID> {
  @JoinColumn(name = "facility_id")
  private List<FacitlityRole> roles = new ArrayList<>();
 
- public String getDescription() {
-	return description;
- }
-
- public void setDescription(String description) {
-	this.description = description;
- }
-
- public Long getSquareFootage() {
-	return squareFootage;
- }
-
- public void setSquareFootage(Long squareFootage) {
-	this.squareFootage = squareFootage;
- }
-
- public Facility getPartOf() {
-	return partOf;
- }
-
- public void setPartOf(Facility partOf) {
-	this.partOf = partOf;
- }
-
- public List<Facility> getContains() {
-	return contains;
- }
-
- public void setContains(List<Facility> contains) {
-	this.contains = contains;
- }
-
- public FacilityType getType() {
-	return type;
- }
-
- public void setType(FacilityType type) {
-	this.type = type;
- }
-
- public List<FacitlityRole> getRoles() {
-	return roles;
- }
-
- public void setRoles(List<FacitlityRole> roles) {
-	this.roles = roles;
- }
 }

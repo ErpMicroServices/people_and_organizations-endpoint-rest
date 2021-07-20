@@ -1,5 +1,7 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.Entity;
@@ -9,6 +11,9 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Entity
+@Data
+@Builder
+
 public class CaseType extends AbstractPersistable<UUID> {
  @NotBlank
  @NotNull
@@ -17,19 +22,4 @@ public class CaseType extends AbstractPersistable<UUID> {
  @ManyToOne
  private CaseType parent;
 
- public String getDescription() {
-	return description;
- }
-
- public void setDescription(String description) {
-	this.description = description;
- }
-
- public CaseType getParent() {
-	return parent;
- }
-
- public void setParent(CaseType parent) {
-	this.parent = parent;
- }
 }

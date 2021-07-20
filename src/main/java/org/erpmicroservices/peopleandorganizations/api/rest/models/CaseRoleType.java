@@ -1,35 +1,41 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Data
+@Builder
+
 public class CaseRoleType extends AbstractPersistable<UUID> {
- @NotBlank
- @NotNull
- private String description;
+	@NotBlank
+	@NotNull
+	private String description;
 
- @ManyToOne
- private CaseRoleType parent;
+	@ManyToOne
+	@JoinColumn(name = "parent_id")
+	private CaseRoleType parent;
 
- public String getDescription() {
-	return description;
- }
+	@OneToMany(mappedBy = "parent")
+	private List<CaseRoleType> children = new ArrayList<>();
 
- public void setDescription(String description) {
-	this.description = description;
- }
+	public boolean isAParent() {
+		return !children.isEmpty();
+	}
 
- public CaseRoleType getParent() {
-	return parent;
- }
+	public boolean isChild() {
+		return parent != null;
+	}
 
- public void setParent(CaseRoleType parent) {
-	this.parent = parent;
- }
 }

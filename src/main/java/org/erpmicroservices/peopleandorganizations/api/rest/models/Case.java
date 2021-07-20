@@ -1,5 +1,7 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.Entity;
@@ -11,6 +13,9 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "kase")
+@Data
+@Builder
+
 public class Case extends AbstractPersistable<UUID> {
  private String description;
 
@@ -24,35 +29,4 @@ public class Case extends AbstractPersistable<UUID> {
  @JoinColumn(name = "case_status_type_id")
  private CaseStatusType caseStatus;
 
- public String getDescription() {
-  return description;
- }
-
- public void setDescription(String description) {
-  this.description = description;
- }
-
- public LocalDateTime getStartedAt() {
-  return startedAt;
- }
-
- public void setStartedAt(LocalDateTime startedAt) {
-  this.startedAt = startedAt;
- }
-
- public CaseType getType() {
-  return type;
- }
-
- public void setType(CaseType type) {
-  this.type = type;
- }
-
- public CaseStatusType getCaseStatus() {
-  return caseStatus;
- }
-
- public void setCaseStatus(CaseStatusType caseStatus) {
-  this.caseStatus = caseStatus;
- }
 }

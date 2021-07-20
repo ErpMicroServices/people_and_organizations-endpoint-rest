@@ -1,6 +1,8 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -11,6 +13,9 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "communication_event")
+@Data
+@Builder
+
 public class CommunicationEvent extends AbstractPersistable<UUID> {
  @Column(name = "started", columnDefinition = "DATE")
  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -55,92 +60,4 @@ public class CommunicationEvent extends AbstractPersistable<UUID> {
  @JoinColumn(name = "communication_event_id")
  private List<CommunicationEventWorkEffort> effort = new ArrayList<>();
 
- public LocalDateTime getStarted() {
-	return started;
- }
-
- public void setStarted(LocalDateTime started) {
-	this.started = started;
- }
-
- public LocalDateTime getEnded() {
-	return ended;
- }
-
- public void setEnded(LocalDateTime ended) {
-	this.ended = ended;
- }
-
- public String getNote() {
-	return note;
- }
-
- public void setNote(String note) {
-	this.note = note;
- }
-
- public ContactMechanismType getContactMechanismType() {
-	return contactMechanismType;
- }
-
- public void setContactMechanismType(ContactMechanismType contactMechanismType) {
-	this.contactMechanismType = contactMechanismType;
- }
-
- public CommunicationEventStatusType getStatusType() {
-	return statusType;
- }
-
- public void setStatusType(CommunicationEventStatusType statusType) {
-	this.statusType = statusType;
- }
-
- public CommunicationEventType getType() {
-	return type;
- }
-
- public void setType(CommunicationEventType type) {
-	this.type = type;
- }
-
-
- public Case getaCase() {
-	return aCase;
- }
-
- public void setaCase(Case aCase) {
-	this.aCase = aCase;
- }
-
- public PartyRelationship getRelationship() {
-	return relationship;
- }
-
- public void setRelationship(PartyRelationship relationship) {
-	this.relationship = relationship;
- }
-
- public List<CommunicationEventPurpose> getPurposes() {
-	return purposes;
- }
-
- public void setPurposes(List<CommunicationEventPurpose> purposes) {
-	this.purposes = purposes;
- }
-
- public List<CommunicationEventRole> getRoles() {
-	return roles;
- }
-
- public void setRoles(List<CommunicationEventRole> roles) {
-	this.roles = roles;
- }
-
- public List<CommunicationEventWorkEffort> getEffort() {
-	return effort;
- }
-
- public void setEffort(List<CommunicationEventWorkEffort> effort) {
-	this.effort = effort;
- }
 }

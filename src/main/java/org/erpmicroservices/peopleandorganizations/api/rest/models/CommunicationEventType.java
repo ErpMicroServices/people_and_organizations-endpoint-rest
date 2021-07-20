@@ -1,5 +1,7 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.Entity;
@@ -9,6 +11,9 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Entity
+@Data
+@Builder
+
 public class CommunicationEventType extends AbstractPersistable<UUID> {
  @NotBlank
  @NotNull
@@ -17,19 +22,4 @@ public class CommunicationEventType extends AbstractPersistable<UUID> {
  @ManyToOne
  private CommunicationEventType parent;
 
- public String getDescription() {
-	return description;
- }
-
- public void setDescription(String description) {
-	this.description = description;
- }
-
- public CommunicationEventType getParent() {
-	return parent;
- }
-
- public void setParent(CommunicationEventType parent) {
-	this.parent = parent;
- }
 }

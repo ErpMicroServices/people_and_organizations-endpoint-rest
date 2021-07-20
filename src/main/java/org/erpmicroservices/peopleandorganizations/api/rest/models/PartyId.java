@@ -1,6 +1,8 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,6 +16,9 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity(name = "party_id")
+@Data
+@Builder
+
 public class PartyId extends AbstractPersistable<UUID> {
  @NotBlank
  @NotNull
@@ -33,35 +38,4 @@ public class PartyId extends AbstractPersistable<UUID> {
  @JoinColumn(name = "id_type_id")
  private IdType type;
 
- public String getIdent() {
-	return ident;
- }
-
- public void setIdent(String ident) {
-	this.ident = ident;
- }
-
- public LocalDate getFromDate() {
-	return fromDate;
- }
-
- public void setFromDate(LocalDate fromDate) {
-	this.fromDate = fromDate;
- }
-
- public LocalDate getThruDate() {
-	return thruDate;
- }
-
- public void setThruDate(LocalDate thruDate) {
-	this.thruDate = thruDate;
- }
-
- public IdType getType() {
-	return type;
- }
-
- public void setType(IdType type) {
-	this.type = type;
- }
 }

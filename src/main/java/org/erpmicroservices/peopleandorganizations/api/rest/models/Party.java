@@ -1,5 +1,7 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.*;
@@ -8,6 +10,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Data
+@Builder
 public class Party extends AbstractPersistable<UUID> {
 
  @ManyToOne
@@ -33,53 +37,5 @@ public class Party extends AbstractPersistable<UUID> {
  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
  @JoinColumn(name = "party_id")
  private List<PartyName> identifications = new ArrayList<>();
-
- public List<PartyName> getNames() {
-  return names;
- }
-
- public void setNames(List<PartyName> names) {
-  this.names = names;
- }
-
- public List<PartyName> getIdentifications() {
-  return identifications;
- }
-
- public void setIdentifications(List<PartyName> identifications) {
-  this.identifications = identifications;
- }
-
- public PartyType getType() {
-  return type;
- }
-
- public void setType(PartyType type) {
-  this.type = type;
- }
-
- public List<PartyClassification> getClassifications() {
-  return classifications;
- }
-
- public void setClassifications(List<PartyClassification> classifications) {
-  this.classifications = classifications;
- }
-
- public List<PartyRole> getRoles() {
-  return roles;
- }
-
- public void setRoles(List<PartyRole> roles) {
-  this.roles = roles;
- }
-
- public List<PartyContactMechanism> getContactMechanisms() {
-  return contactMechanisms;
- }
-
- public void setContactMechanisms(List<PartyContactMechanism> contactMechanisms) {
-  this.contactMechanisms = contactMechanisms;
- }
 
 }

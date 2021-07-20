@@ -1,6 +1,8 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -12,6 +14,9 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity(name = "case_role")
+@Data
+@Builder
+
 public class CaseRole extends AbstractPersistable<UUID> {
 
  @Column(name = "from_date", columnDefinition = "DATE")
@@ -36,43 +41,4 @@ public class CaseRole extends AbstractPersistable<UUID> {
  @JoinColumn(name = "party_id")
  private Party party;
 
- public LocalDate getFromDate() {
-	return fromDate;
- }
-
- public void setFromDate(LocalDate fromDate) {
-	this.fromDate = fromDate;
- }
-
- public LocalDate getThruDate() {
-	return thruDate;
- }
-
- public void setThruDate(LocalDate thruDate) {
-	this.thruDate = thruDate;
- }
-
- public Case getKase() {
-	return kase;
- }
-
- public void setKase(Case kase) {
-	this.kase = kase;
- }
-
- public CaseRoleType getType() {
-	return type;
- }
-
- public void setType(CaseRoleType type) {
-	this.type = type;
- }
-
- public Party getParty() {
-	return party;
- }
-
- public void setParty(Party party) {
-	this.party = party;
- }
 }

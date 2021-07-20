@@ -1,5 +1,7 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.Entity;
@@ -10,6 +12,9 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Entity(name = "contact_mechanism")
+@Data
+@Builder
+
 public class ContactMechanism extends AbstractPersistable<UUID> {
  @NotBlank
  @NotNull
@@ -20,29 +25,5 @@ public class ContactMechanism extends AbstractPersistable<UUID> {
  @ManyToOne
  @JoinColumn(name = "contact_mechanism_type_id")
  private ContactMechanismType type;
-
- public String getEndPoint() {
-  return endPoint;
- }
-
- public void setEndPoint(String endPoint) {
-  this.endPoint = endPoint;
- }
-
- public String getDirections() {
-  return directions;
- }
-
- public void setDirections(String directions) {
-  this.directions = directions;
- }
-
- public ContactMechanismType getType() {
-  return type;
- }
-
- public void setType(ContactMechanismType type) {
-  this.type = type;
- }
 
 }
