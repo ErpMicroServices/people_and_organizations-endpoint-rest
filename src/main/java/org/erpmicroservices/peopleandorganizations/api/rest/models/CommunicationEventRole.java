@@ -1,7 +1,9 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.Entity;
@@ -12,7 +14,8 @@ import java.util.UUID;
 @Entity(name = "communication_event_role")
 @Data
 @Builder
-
+@NoArgsConstructor
+@AllArgsConstructor
 public class CommunicationEventRole extends AbstractPersistable<UUID> {
  @ManyToOne
  @JoinColumn(name = "communication_event_role_type_id")

@@ -1,5 +1,9 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.Entity;
@@ -8,6 +12,10 @@ import javax.persistence.ManyToOne;
 import java.util.UUID;
 
 @Entity(name = "valid_contact_mechanism_role")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ValidContactMechanismRole extends AbstractPersistable<UUID> {
 
  @ManyToOne

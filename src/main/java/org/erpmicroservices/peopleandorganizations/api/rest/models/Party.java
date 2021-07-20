@@ -1,7 +1,9 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.*;
@@ -12,6 +14,8 @@ import java.util.UUID;
 @Entity
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Party extends AbstractPersistable<UUID> {
 
  @ManyToOne

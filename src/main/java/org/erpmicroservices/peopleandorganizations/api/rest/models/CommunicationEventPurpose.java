@@ -1,7 +1,9 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.Entity;
@@ -14,7 +16,8 @@ import java.util.UUID;
 @Entity(name = "communication_event_purpose")
 @Data
 @Builder
-
+@NoArgsConstructor
+@AllArgsConstructor
 public class CommunicationEventPurpose extends AbstractPersistable<UUID> {
  @NotBlank
  @NotNull

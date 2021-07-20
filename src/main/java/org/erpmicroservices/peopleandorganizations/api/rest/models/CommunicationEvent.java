@@ -1,8 +1,10 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,7 +17,8 @@ import java.util.UUID;
 @Entity(name = "communication_event")
 @Data
 @Builder
-
+@NoArgsConstructor
+@AllArgsConstructor
 public class CommunicationEvent extends AbstractPersistable<UUID> {
  @Column(name = "started", columnDefinition = "DATE")
  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
