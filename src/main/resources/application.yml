@@ -1,12 +1,26 @@
 spring:
+  application:
+    name: People and Organizations Endpoint REST
   datasource:
     url: jdbc:postgresql://localhost:5432/people_and_organizations
     username: people_and_organizations
     password: people_and_organizations
   jpa:
+    database: POSTGRESQL
+    show-sql: true
     hibernate:
       ddl-auto: validate
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,info
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework.data.repository: INFO
+    org.hibernate: INFO
+
 
