@@ -1,9 +1,6 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.Entity;
@@ -21,27 +18,28 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Facility extends AbstractPersistable<UUID> {
- @NotBlank
- @NotNull
- private String description;
+	@NotBlank
+	@NotNull
+	private String description;
 
- private Long squareFootage;
+	private Long squareFootage;
 
- @ManyToOne
- @JoinColumn(name = "part_of")
- private Facility partOf;
+	@ManyToOne
+	@JoinColumn(name = "part_of_id")
+	private Facility partOf;
 
- @OneToMany
- @JoinColumn(name = "part_of")
- private List<Facility> contains = new ArrayList<>();
+	@OneToMany
+	@JoinColumn(name = "part_of_id")
+	private List<Facility> contains = new ArrayList<>();
 
- @ManyToOne
- @JoinColumn(name = "facility_type_id")
- private FacilityType type;
+	@ManyToOne
+	@JoinColumn(name = "facility_type_id")
+	private FacilityType type;
 
- @OneToMany
- @JoinColumn(name = "facility_id")
- private List<FacitlityRole> roles = new ArrayList<>();
+	@OneToMany
+	@JoinColumn(name = "facility_id")
+	private List<FacitlityRole> roles = new ArrayList<>();
 
 }
