@@ -23,7 +23,7 @@
 		<tag >people_and_organizations-endpoint-rest-1.0.0</tag >
 	</scm >
 	<properties >
-		<java.version >18</java.version >
+		<java.version>20</java.version>
 	</properties >
 	<distributionManagement >
 		<repository >
