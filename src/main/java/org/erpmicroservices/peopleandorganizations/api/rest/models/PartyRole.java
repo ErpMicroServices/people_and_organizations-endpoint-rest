@@ -36,11 +36,11 @@ public class PartyRole extends AbstractPersistable<UUID> {
  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
  @JoinColumn(name = "from_party_role_id")
  @Builder.Default
- private List<PartyRelationship> fromRelationships = new ArrayList<PartyRelationship>();
+ private List<PartyRelationship> fromRelationships = new ArrayList<>();
 
  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
  @JoinColumn(name = "to_party_role_id")
  @Builder.Default
- private List<PartyRelationship> toRelationships = new ArrayList<PartyRelationship>();
+ private List<PartyRelationship> toRelationships = new ArrayList<>();
 
 }
