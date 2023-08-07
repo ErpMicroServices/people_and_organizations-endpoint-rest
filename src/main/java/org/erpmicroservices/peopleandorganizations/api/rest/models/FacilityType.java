@@ -1,6 +1,7 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
@@ -23,7 +24,8 @@ public class FacilityType extends AbstractPersistable<UUID> {
  @NotNull
  private String description;
 
- @ManyToOne
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
  private FacilityType parent;
 
  @OneToMany(mappedBy = "parent")

@@ -1,6 +1,7 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
@@ -24,11 +25,12 @@ public class PartyRoleType extends AbstractPersistable<UUID> {
  private String description;
 
  @ManyToOne
+ @JoinColumn(name = "parent_id")
  private PartyRoleType parent;
 
  @OneToMany(mappedBy = "parent")
  @Builder.Default
- private List<PartyType> children = new ArrayList<>();
+ private List<PartyRoleType> children = new ArrayList<>();
 
  public boolean isAParent() {
   return !children.isEmpty();

@@ -1,6 +1,7 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
@@ -24,6 +25,7 @@ public class PartyRelationshipType extends AbstractPersistable<UUID> {
  private String description;
 
  @ManyToOne
+ @JoinColumn(name = "parent_id")
  private PartyRelationshipType parent;
 
  @OneToMany(mappedBy = "parent")
