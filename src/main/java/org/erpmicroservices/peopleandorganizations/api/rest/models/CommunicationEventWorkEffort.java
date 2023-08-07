@@ -2,10 +2,7 @@ package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.util.UUID;
@@ -15,6 +12,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class CommunicationEventWorkEffort extends AbstractPersistable<UUID> {
 
  @Column(name = "work_effort_id")

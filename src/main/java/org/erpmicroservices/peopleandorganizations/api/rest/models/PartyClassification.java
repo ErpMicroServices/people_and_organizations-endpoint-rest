@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -20,6 +17,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class PartyClassification extends AbstractPersistable<UUID> {
 
  @ManyToOne
@@ -41,35 +39,4 @@ public class PartyClassification extends AbstractPersistable<UUID> {
  @JsonFormat(pattern = "yyyy-MM-dd")
  private LocalDate thruDate;
 
- public PartyClassificationType getType() {
-	return type;
- }
-
- public void setType(PartyClassificationType type) {
-	this.type = type;
- }
-
- public String getValue() {
-	return value;
- }
-
- public void setValue(String value) {
-	this.value = value;
- }
-
- public LocalDate getFromDate() {
-	return fromDate;
- }
-
- public void setFromDate(LocalDate fromDate) {
-	this.fromDate = fromDate;
- }
-
- public LocalDate getThruDate() {
-	return thruDate;
- }
-
- public void setThruDate(LocalDate thruDate) {
-	this.thruDate = thruDate;
- }
 }

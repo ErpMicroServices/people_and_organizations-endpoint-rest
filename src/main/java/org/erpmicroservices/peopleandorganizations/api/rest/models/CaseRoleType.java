@@ -6,10 +6,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.util.ArrayList;
@@ -21,6 +18,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class CaseRoleType extends AbstractPersistable<UUID> {
 	@NotBlank
 	@NotNull
@@ -30,7 +28,8 @@ public class CaseRoleType extends AbstractPersistable<UUID> {
 	@JoinColumn(name = "parent_id")
 	private CaseRoleType parent;
 
-	@OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent")
+    @Builder.Default
 	private List<CaseRoleType> children = new ArrayList<>();
 
 	public boolean isAParent() {

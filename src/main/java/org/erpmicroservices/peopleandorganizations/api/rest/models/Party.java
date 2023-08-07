@@ -1,10 +1,7 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.util.ArrayList;
@@ -16,6 +13,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Party extends AbstractPersistable<UUID> {
 
  @ManyToOne
@@ -24,22 +22,27 @@ public class Party extends AbstractPersistable<UUID> {
 
  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
  @JoinColumn(name = "party_id")
+ @Builder.Default
  private List<PartyClassification> classifications = new ArrayList<>();
 
  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
  @JoinColumn(name = "party_id")
+ @Builder.Default
  private List<PartyRole> roles = new ArrayList<>();
 
  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
  @JoinColumn(name = "party_id")
+ @Builder.Default
  private List<PartyContactMechanism> contactMechanisms = new ArrayList<>();
 
  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
  @JoinColumn(name = "party_id")
+ @Builder.Default
  private List<PartyName> names = new ArrayList<>();
 
  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
  @JoinColumn(name = "party_id")
+ @Builder.Default
  private List<PartyName> identifications = new ArrayList<>();
 
 }

@@ -32,6 +32,7 @@ public class Facility extends AbstractPersistable<UUID> {
 
 	@OneToMany
 	@JoinColumn(name = "part_of_id")
+    @Builder.Default
 	private List<Facility> contains = new ArrayList<>();
 
 	@ManyToOne
@@ -39,7 +40,8 @@ public class Facility extends AbstractPersistable<UUID> {
 	private FacilityType type;
 
 	@OneToMany
-	@JoinColumn(name = "facility_id")
+    @JoinColumn(name = "facility_id")
+    @Builder.Default
 	private List<FacitlityRole> roles = new ArrayList<>();
 
 }
