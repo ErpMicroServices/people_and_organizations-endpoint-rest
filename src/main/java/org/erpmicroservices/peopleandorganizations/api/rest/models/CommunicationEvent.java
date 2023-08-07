@@ -2,10 +2,7 @@ package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -19,6 +16,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class CommunicationEvent extends AbstractPersistable<UUID> {
  @Column(name = "started", columnDefinition = "DATE")
  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -53,14 +51,17 @@ public class CommunicationEvent extends AbstractPersistable<UUID> {
 
  @OneToMany
  @JoinColumn(name = "communication_event_id")
+ @Builder.Default
  private List<CommunicationEventPurpose> purposes = new ArrayList<>();
 
  @OneToMany
  @JoinColumn(name = "communication_event_id")
+ @Builder.Default
  private List<CommunicationEventRole> roles = new ArrayList<>();
 
  @OneToMany
  @JoinColumn(name = "communication_event_id")
+ @Builder.Default
  private List<CommunicationEventWorkEffort> effort = new ArrayList<>();
 
 }

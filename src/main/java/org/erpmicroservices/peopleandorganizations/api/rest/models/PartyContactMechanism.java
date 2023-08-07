@@ -5,10 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -20,6 +17,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class PartyContactMechanism extends AbstractPersistable<UUID> {
 
  @Column(name = "from_date", columnDefinition = "DATE")
@@ -32,6 +30,7 @@ public class PartyContactMechanism extends AbstractPersistable<UUID> {
  @JsonFormat(pattern = "yyyy-MM-dd")
  private LocalDate thruDate;
 
+ @Builder.Default
  private boolean doNotSolicitIndicator = true;
 
  private String comment;

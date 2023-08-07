@@ -2,10 +2,7 @@ package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -19,6 +16,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class PartyRole extends AbstractPersistable<UUID> {
 
  @ManyToOne
@@ -37,10 +35,12 @@ public class PartyRole extends AbstractPersistable<UUID> {
 
  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
  @JoinColumn(name = "from_party_role_id")
+ @Builder.Default
  private List<PartyRelationship> fromRelationships = new ArrayList<PartyRelationship>();
 
  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
  @JoinColumn(name = "to_party_role_id")
+ @Builder.Default
  private List<PartyRelationship> toRelationships = new ArrayList<PartyRelationship>();
 
 }
