@@ -24,3 +24,5 @@ hs_err_pid*
 /target/
 /people_and_organizations-api-rest.iml
 
+/build/
+/.gradle/
