@@ -11,5 +11,6 @@ import java.util.UUID;
 @RepositoryRestResource
 public interface CaseTypeRepo extends JpaRepository<CaseType, UUID> {
 
+    CaseType findByDescription(String description);
     Page<CaseType> findCaseTypeByParentIdIsNotNull(Pageable unpaged);
 }

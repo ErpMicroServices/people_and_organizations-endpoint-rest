@@ -11,6 +11,6 @@ import java.util.UUID;
 @RepositoryRestResource
 public interface CaseStatusTypeRepo extends JpaRepository<CaseStatusType, UUID> {
 
-
+    CaseStatusType findByDescription( String description);
     Page<CaseStatusType> findCaseStatusTypeByParentIdIsNotNull(Pageable unpaged);
 }

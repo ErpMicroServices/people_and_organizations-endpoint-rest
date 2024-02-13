@@ -6,7 +6,7 @@ import lombok.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -21,12 +21,12 @@ public class CommunicationEvent extends AbstractPersistable<UUID> {
  @Column(name = "started", columnDefinition = "DATE")
  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
- private LocalDateTime started;
+ private ZonedDateTime started;
 
  @Column(name = "ended", columnDefinition = "DATE")
  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
- private LocalDateTime ended;
+ private ZonedDateTime ended;
 
  private String note;
 

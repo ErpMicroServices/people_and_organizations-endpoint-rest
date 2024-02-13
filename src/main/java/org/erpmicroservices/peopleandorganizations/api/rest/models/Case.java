@@ -7,7 +7,8 @@ import jakarta.persistence.Table;
 import lombok.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Entity
@@ -20,7 +21,7 @@ import java.util.UUID;
 public class Case extends AbstractPersistable<UUID> {
  private String description;
 
- private LocalDateTime startedAt;
+ private ZonedDateTime startedAt;
 
  @ManyToOne
  @JoinColumn(name = "case_type_id")

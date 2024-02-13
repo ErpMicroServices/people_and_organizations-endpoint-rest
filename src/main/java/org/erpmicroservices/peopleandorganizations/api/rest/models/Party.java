@@ -1,6 +1,8 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
@@ -15,6 +17,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Party extends AbstractPersistable<UUID> {
+
+ @NotNull
+ @NotBlank
+ private String comment;
 
  @ManyToOne
  @JoinColumn(name = "party_type_id")
