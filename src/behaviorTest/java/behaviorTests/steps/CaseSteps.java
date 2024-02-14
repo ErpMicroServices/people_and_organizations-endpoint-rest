@@ -8,11 +8,15 @@ import org.erpmicroservices.peopleandorganizations.api.rest.models.Case;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.CaseStatusType;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.CaseType;
 import org.erpmicroservices.peopleandorganizations.api.rest.repositories.*;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.web.reactive.function.client.ClientResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.erpmicroservices.peopleandorganizations.builders.DateTimeTestDataBuilder.zonedDateTimeNow;
+import static org.junit.Assert.assertEquals;
 
 public class CaseSteps extends CucumberSpringBootContext {
 
@@ -36,20 +40,28 @@ public class CaseSteps extends CucumberSpringBootContext {
 
     @When("I search for all cases")
     public void i_search_for_all_cases() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
+        final ClientResponse clientResponse = webClient.get().uri("/cases").exchange().block();
+        ParameterizedTypeReference<Map<String, Case>> type =
+                new ParameterizedTypeReference<Map<String, Case>>() {};
+
+        Map<String, Case> body = clientResponse.bodyToMono(type).block();
+
+        Map<String, Case> embedded = (Map<String, Case>) body.get("_embedded");
+        this.actualCases = (List<Case>) embedded.get("messages");
+
+
     }
 
     @Then("I get {int} cases")
     public void i_get_cases(Integer numberOfCases) {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        assertEquals(numberOfCases.intValue(), this.actualCases.size());
     }
 
     @Then("{int} of them are cases of type {string}")
     public void of_them_are_cases_of_type(Integer numberOfCases, String caseType) {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        final List<Case> caseList = actualCases.stream().filter(k -> k.getDescription().equals(caseType)).toList();
+        assertEquals( numberOfCases.intValue(), caseList.size());
     }
 
     public CaseSteps(CaseStatusTypeRepo caseStatusTypeRepo, CaseTypeRepo caseTypeRepo, CaseRepo caseRepo, PartyTypeRepo partyTypeRepo, PartyRepo partyRepo, CaseRoleTypeRepo caseRoleTypeRepo, CaseRoleRepo caseRoleRepo, ContactMechanismTypeRepo contactMechanismTypeRepo, PartyRoleTypeRepo partyRoleTypeRepo, PartyRoleRepo partyRoleRepo, CommunicationEventStatusTypeRepo communicationEventStatusTypeRepo, CommunicationEventTypeRepo communicationEventTypeRepo, PartyRelationshipTypeRepo partyRelationshipTypeRepo, PartyRelationshipStatusTypeRepo partyRelationshipStatusTypeRepo, PriorityTypeRepo priorityTypeRepo, PartyRelationshipRepo partyRelationshipRepo, CommunicationEventRepo communicationEventRepo, FacilityRepo facilityRepo, FacilityTypeRepo facilityTypeRepo, FacilityRoleTypeRepo facilityRoleTypeRepo, FacilityRoleRepo facilityRoleRepo, FacilityContactMechanismRepo facilityContactMechanismRepo, ContactMechanismRepo contactMechanismRepo, GeographicBoundaryRepo geographicBoundaryRepo, GeographicBoundaryTypeRepo geographicBoundaryTypeRepo, ContactMechanismGeographicBoundaryRepo contactMechanismGeographicBoundaryRepo, PartyContactMechanismRepo partyContactMechanismRepo, PartyContactMechanismPurposeRepo partyContactMechanismPurposeRepo, PartyContactMechanismPurposeTypeRepo partyContactMechanismPurposeTypeRepo, CommunicationEventPurposeTypeRepo communicationEventPurposeTypeRepo, CommunicationEventRoleTypeRepo communicationEventRoleTypeRepo) {

@@ -3,16 +3,20 @@ package behaviorTests;
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.erpmicroservices.peopleandorganizations.api.rest.PeopleAndOrganizationsApiRestApplication;
 import org.erpmicroservices.peopleandorganizations.api.rest.repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 @CucumberContextConfiguration
 @ContextConfiguration(classes = PeopleAndOrganizationsApiRestApplication.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = RestClientConfiguration.class,
+        webEnvironment = WebEnvironment.RANDOM_PORT)
 public class CucumberSpringBootContext {
     protected final CaseStatusTypeRepo caseStatusTypeRepo;
     protected final CaseTypeRepo caseTypeRepo;
@@ -87,10 +91,14 @@ public class CucumberSpringBootContext {
             DATABASE_IMAGE_NAME
     );
 
+    @Autowired
+    protected WebClient webClient;
+
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", postgresqlDbContainer::getJdbcUrl);
         registry.add("spring.datasource.username", postgresqlDbContainer::getUsername);
         registry.add("spring.datasource.password", postgresqlDbContainer::getPassword);
     }
+
 }

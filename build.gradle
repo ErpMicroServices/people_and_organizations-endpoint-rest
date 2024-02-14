@@ -44,17 +44,14 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    // https://mvnrepository.com/artifact/org.wiremock/wiremock
-    testImplementation 'org.wiremock:wiremock:3.3.1'
     behaviorTestImplementation 'org.springframework:spring-webflux'
     behaviorTestImplementation 'org.springframework.boot:spring-boot-starter-actuator'
     behaviorTestImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    behaviorTestImplementation 'org.springframework.boot:spring-boot-starter-graphql'
+    behaviorTestImplementation 'org.springframework.boot:spring-boot-starter-hateoas'
     behaviorTestImplementation 'org.springframework.boot:spring-boot-starter-test'
     behaviorTestImplementation 'org.springframework.boot:spring-boot-starter-validation'
     behaviorTestImplementation 'org.springframework.boot:spring-boot-starter-web'
     behaviorTestImplementation 'org.springframework.boot:spring-boot-starter-webflux'
-    behaviorTestImplementation 'org.springframework.graphql:spring-graphql-test'
     behaviorTestImplementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
     behaviorTestImplementation 'io.cucumber:cucumber-java:7.11.1'
     behaviorTestImplementation 'io.cucumber:cucumber-junit:7.11.1'
@@ -64,7 +61,6 @@ dependencies {
     behaviorTestImplementation "org.testcontainers:testcontainers:1.18.3"
     behaviorTestImplementation "org.testcontainers:junit-jupiter:1.18.3"
     behaviorTestImplementation 'org.testcontainers:postgresql:1.18.3'
-    behaviorTestImplementation 'com.graphql-java:graphql-java-extended-scalars:20.2'
     behaviorTestImplementation 'org.postgresql:postgresql'
     behaviorTestImplementation 'com.querydsl:querydsl-apt:5.1.0:jakarta'
 }

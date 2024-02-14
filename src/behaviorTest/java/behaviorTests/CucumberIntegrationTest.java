@@ -10,4 +10,5 @@ import org.junit.runner.RunWith;
         features = {"../people_and_organizations-features"}
 )
 public class CucumberIntegrationTest {
+
 }

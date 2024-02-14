@@ -8,8 +8,6 @@ import io.cucumber.java.en.Given;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.*;
 import org.erpmicroservices.peopleandorganizations.api.rest.repositories.*;
 import org.springframework.data.domain.Pageable;
-import org.springframework.graphql.test.tester.GraphQlTester;
-
 import java.util.ArrayList;
 import java.util.List;
 
