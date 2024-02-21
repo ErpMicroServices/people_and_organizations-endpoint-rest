@@ -5,7 +5,6 @@ import org.erpmicroservices.peopleandorganizations.api.rest.PeopleAndOrganizatio
 import org.erpmicroservices.peopleandorganizations.api.rest.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -15,8 +14,7 @@ import org.testcontainers.utility.DockerImageName;
 
 @CucumberContextConfiguration
 @ContextConfiguration(classes = PeopleAndOrganizationsApiRestApplication.class)
-@SpringBootTest(classes = RestClientConfiguration.class,
-        webEnvironment = WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CucumberSpringBootContext {
     protected final CaseStatusTypeRepo caseStatusTypeRepo;
     protected final CaseTypeRepo caseTypeRepo;
