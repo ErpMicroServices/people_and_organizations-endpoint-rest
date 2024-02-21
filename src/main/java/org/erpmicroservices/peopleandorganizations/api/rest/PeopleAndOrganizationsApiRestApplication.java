@@ -9,7 +9,7 @@ public class PeopleAndOrganizationsApiRestApplication {
 //    @Autowired
 //    private ObjectMapper objectMapper;
 
-    public static void main(String[] args) {
+    public static void main(String... args) {
         SpringApplication.run(PeopleAndOrganizationsApiRestApplication.class, args);
     }
 

@@ -3,14 +3,8 @@ package behaviorTests;
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.erpmicroservices.peopleandorganizations.api.rest.PeopleAndOrganizationsApiRestApplication;
 import org.erpmicroservices.peopleandorganizations.api.rest.repositories.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.utility.DockerImageName;
 
 @CucumberContextConfiguration
 @ContextConfiguration(classes = PeopleAndOrganizationsApiRestApplication.class)
@@ -81,22 +75,4 @@ public class CucumberSpringBootContext {
         this.communicationEventPurposeTypeRepo = communicationEventPurposeTypeRepo;
         this.communicationEventRoleTypeRepo = communicationEventRoleTypeRepo;
     }
-
-    private final static DockerImageName DATABASE_IMAGE_NAME = DockerImageName
-            .parse("erpmicroservices/people_and_organizations-database:latest")
-            .asCompatibleSubstituteFor("postgres");
-    protected static PostgreSQLContainer<?> postgresqlDbContainer = new PostgreSQLContainer<>(
-            DATABASE_IMAGE_NAME
-    );
-
-    @Autowired
-    protected WebClient webClient;
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgresqlDbContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", postgresqlDbContainer::getUsername);
-        registry.add("spring.datasource.password", postgresqlDbContainer::getPassword);
-    }
-
 }
