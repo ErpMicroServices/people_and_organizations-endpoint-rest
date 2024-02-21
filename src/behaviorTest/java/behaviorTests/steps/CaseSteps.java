@@ -9,14 +9,15 @@ import org.erpmicroservices.peopleandorganizations.api.rest.models.CaseStatusTyp
 import org.erpmicroservices.peopleandorganizations.api.rest.models.CaseType;
 import org.erpmicroservices.peopleandorganizations.api.rest.repositories.*;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.web.reactive.function.client.ClientResponse;
-
+import org.springframework.hateoas.PagedResources;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import static org.erpmicroservices.peopleandorganizations.builders.DateTimeTestDataBuilder.zonedDateTimeNow;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CaseSteps extends CucumberSpringBootContext {
 
@@ -41,14 +42,19 @@ public class CaseSteps extends CucumberSpringBootContext {
     @When("I search for all cases")
     public void i_search_for_all_cases() {
 
-        final ClientResponse clientResponse = webClient.get().uri("/cases").exchange().block();
         ParameterizedTypeReference<Map<String, Case>> type =
                 new ParameterizedTypeReference<Map<String, Case>>() {};
 
-        Map<String, Case> body = clientResponse.bodyToMono(type).block();
+        PagedResources<Case> response = webClient
+                .get()
+                .uri("/cases")
+                .retrieve()
+                .bodyToMono(type)
+                .block();
 
-        Map<String, Case> embedded = (Map<String, Case>) body.get("_embedded");
-        this.actualCases = (List<Case>) embedded.get("messages");
+        assertTrue("Expected success going to " + clientResponse.request().getURI() + " but got " + clientResponse.statusCode(), clientResponse.statusCode().is2xxSuccessful());
+
+        this.actualCases = Arrays.asList(embedded);
 
 
     }

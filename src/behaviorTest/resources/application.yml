@@ -13,10 +13,12 @@ spring:
     url: jdbc:postgresql://localhost:5432/people_and_organizations
     username: people_and_organizations
     password: people_and_organizations
+#  jackson:
+#    deserialization:
+#      ADJUST_DATES_TO_CONTEXT_TIME_ZONE: false
 
 logging:
   level:
     ROOT: INFO
     org.springframework.data.repository: INFO
-
-    org.springframework.web: DEBUG
+    org.springframework.web: INFO

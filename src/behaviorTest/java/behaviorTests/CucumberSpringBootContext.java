@@ -16,7 +16,7 @@ import org.testcontainers.utility.DockerImageName;
 @CucumberContextConfiguration
 @ContextConfiguration(classes = PeopleAndOrganizationsApiRestApplication.class)
 @SpringBootTest(classes = RestClientConfiguration.class,
-        webEnvironment = WebEnvironment.RANDOM_PORT)
+        webEnvironment = WebEnvironment.NONE)
 public class CucumberSpringBootContext {
     protected final CaseStatusTypeRepo caseStatusTypeRepo;
     protected final CaseTypeRepo caseTypeRepo;

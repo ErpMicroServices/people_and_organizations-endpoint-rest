@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class RestClientConfiguration {
 
     @Bean
-    public WebClient webClient(WebClient.Builder webClientBuilder,@Value("${local.server.port}") int randomPort) {
+    public WebClient webClient(WebClient.Builder webClientBuilder,@Value("${local.server.port:8080}") int randomPort) {
         return webClientBuilder
                 .baseUrl("http://localhost:" + randomPort)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, String.valueOf(MediaTypes.HAL_JSON))
