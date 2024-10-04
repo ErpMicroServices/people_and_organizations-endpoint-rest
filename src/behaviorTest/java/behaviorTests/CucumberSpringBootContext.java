@@ -5,6 +5,8 @@ import org.erpmicroservices.peopleandorganizations.api.rest.PeopleAndOrganizatio
 import org.erpmicroservices.peopleandorganizations.api.rest.repositories.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.PostgreSQLContainerProvider;
 
 @CucumberContextConfiguration
 @ContextConfiguration(classes = PeopleAndOrganizationsApiRestApplication.class)

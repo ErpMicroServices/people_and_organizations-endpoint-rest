@@ -1,6 +1,6 @@
 package org.erpmicroservices.peopleandorganizations.builders;
 
-import org.erpmicroservices.peopleandorganizations.api.rest.models.CaseRole;;
+import org.erpmicroservices.peopleandorganizations.api.rest.models.CaseRole;
 
 import java.time.LocalDate;
 

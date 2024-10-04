@@ -1,6 +1,7 @@
 package behaviorTests.steps;
 
 import behaviorTests.CucumberSpringBootContext;
+import ch.qos.logback.classic.LoggerContext;
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
@@ -8,6 +9,9 @@ import io.cucumber.java.en.Given;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.*;
 import org.erpmicroservices.peopleandorganizations.api.rest.repositories.*;
 import org.springframework.data.domain.Pageable;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.utility.DockerImageName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,19 +20,22 @@ import static org.junit.Assert.fail;
 public class Common extends CucumberSpringBootContext {
     private final List<CaseType> caseTypes = new ArrayList<>();
 
-
     public Common(CaseTypeRepo caseTypeRepo, CaseStatusTypeRepo caseStatusTypeRepo, PartyContactMechanismRepo partyContactMechanismRepo, ContactMechanismRepo contactMechanismRepo, ContactMechanismGeographicBoundaryRepo contactMechanismGeographicBoundaryRepo, CommunicationEventPurposeTypeRepo communicationEventPurposeTypeRepo, CaseRepo caseRepo, PartyTypeRepo partyTypeRepo, PartyRelationshipStatusTypeRepo partyRelationshipStatusTypeRepo, FacilityRoleRepo facilityRoleRepo, PartyRepo partyRepo, CaseRoleTypeRepo caseRoleTypeRepo, PartyRelationshipTypeRepo partyRelationshipTypeRepo, CommunicationEventRepo communicationEventRepo, FacilityRoleTypeRepo facilityRoleTypeRepo, GeographicBoundaryRepo geographicBoundaryRepo, CommunicationEventTypeRepo communicationEventTypeRepo, CaseRoleRepo caseRoleRepo, PartyContactMechanismPurposeRepo partyContactMechanismPurposeRepo, ContactMechanismTypeRepo contactMechanismTypeRepo, FacilityContactMechanismRepo facilityContactMechanismRepo, PartyRoleTypeRepo partyRoleTypeRepo, PartyRoleRepo partyRoleRepo, FacilityTypeRepo facilityTypeRepo, GeographicBoundaryTypeRepo geographicBoundaryTypeRepo, CommunicationEventStatusTypeRepo communicationEventStatusTypeRepo, PartyRelationshipRepo partyRelationshipRepo, PartyContactMechanismPurposeTypeRepo partyContactMechanismPurposeTypeRepo, CommunicationEventRoleTypeRepo communicationEventRoleTypeRepo, PriorityTypeRepo priorityTypeRepo, FacilityRepo facilityRepo) {
         super(caseStatusTypeRepo, caseTypeRepo, caseRepo, partyTypeRepo, partyRepo, caseRoleTypeRepo, caseRoleRepo, contactMechanismTypeRepo, partyRoleTypeRepo, partyRoleRepo, communicationEventStatusTypeRepo, communicationEventTypeRepo, partyRelationshipTypeRepo, partyRelationshipStatusTypeRepo, priorityTypeRepo, partyRelationshipRepo, communicationEventRepo, facilityRepo, facilityTypeRepo, facilityRoleTypeRepo, facilityRoleRepo, facilityContactMechanismRepo, contactMechanismRepo, geographicBoundaryRepo, geographicBoundaryTypeRepo, contactMechanismGeographicBoundaryRepo, partyContactMechanismRepo, partyContactMechanismPurposeRepo, partyContactMechanismPurposeTypeRepo, communicationEventPurposeTypeRepo, communicationEventRoleTypeRepo);
     }
 
+    public static final PostgreSQLContainer<?>  postgreSQLContainer = new PostgreSQLContainer<>(
+            DockerImageName.parse("erpmicroservices/people_and_organizations-database:latest")
+                    .asCompatibleSubstituteFor("postgres"));
+
     @BeforeAll
     public static void setupWorld() {
-        postgresqlDbContainer.start();
+        postgreSQLContainer.start();
     }
 
     @AfterAll
     public static void tearDownWorld() {
-        postgresqlDbContainer.stop();
+        postgreSQLContainer.stop();
     }
 
     @Before
