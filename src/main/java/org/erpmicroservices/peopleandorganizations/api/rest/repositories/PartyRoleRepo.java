@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @RepositoryRestResource
 public interface PartyRoleRepo extends JpaRepository<PartyRole, UUID> {
-   y
+   
 }
