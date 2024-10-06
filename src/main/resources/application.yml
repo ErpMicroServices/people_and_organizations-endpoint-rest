@@ -12,9 +12,6 @@ spring:
     hibernate:
       ddl-auto: validate
     database: postgresql
-#  jackson:
-#    deserialization:
-#      ADJUST_DATES_TO_CONTEXT_TIME_ZONE: false
 
 management:
   endpoints:
@@ -22,10 +19,24 @@ management:
       exposure:
         include: health,metrics,info
 
+---
+
+spring:
+  config:
+    activate:
+      on-profile: development
+
 logging:
   level:
     ROOT: INFO
     org.springframework.data.repository: INFO
-    org.hibernate: INFO
+    org.hibernate:
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: docker
 
 
