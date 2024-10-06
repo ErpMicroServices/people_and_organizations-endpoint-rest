@@ -45,6 +45,11 @@ public class CaseSteps extends CucumberSpringBootContext {
         actualCases = caseRepo.findAllByType_Description(caseTypeDescription);
     }
 
+    @When("I search for cases with a status of {string}")
+    public void i_search_for_cases_with_a_status_of(String caseStatusDescription) {
+        actualCases = caseRepo.findAllByCaseStatus_Description(caseStatusDescription);
+    }
+
     @Then("I get {int} cases")
     public void i_get_cases(Integer numberOfCases) {
         Assert.assertEquals(numberOfCases.longValue(), actualCases.size());
@@ -60,6 +65,15 @@ public class CaseSteps extends CucumberSpringBootContext {
                         .toList()
                         .size()
         );
+    }
+
+    @Then("{int} of them are cases in status {string}")
+    public void of_them_are_cases_in_status(Integer numberOfCases, String status) {
+        Assert.assertEquals(numberOfCases.longValue(),
+                actualCases.stream()
+                        .filter(c -> c.getCaseStatus().getDescription().equals(status))
+                        .toList()
+                        .size());
     }
 
     public CaseSteps(CaseStatusTypeRepo caseStatusTypeRepo, CaseTypeRepo caseTypeRepo, CaseRepo caseRepo, PartyTypeRepo partyTypeRepo, PartyRepo partyRepo, CaseRoleTypeRepo caseRoleTypeRepo, CaseRoleRepo caseRoleRepo, ContactMechanismTypeRepo contactMechanismTypeRepo, PartyRoleTypeRepo partyRoleTypeRepo, PartyRoleRepo partyRoleRepo, CommunicationEventStatusTypeRepo communicationEventStatusTypeRepo, CommunicationEventTypeRepo communicationEventTypeRepo, PartyRelationshipTypeRepo partyRelationshipTypeRepo, PartyRelationshipStatusTypeRepo partyRelationshipStatusTypeRepo, PriorityTypeRepo priorityTypeRepo, PartyRelationshipRepo partyRelationshipRepo, CommunicationEventRepo communicationEventRepo, FacilityRepo facilityRepo, FacilityTypeRepo facilityTypeRepo, FacilityRoleTypeRepo facilityRoleTypeRepo, FacilityRoleRepo facilityRoleRepo, FacilityContactMechanismRepo facilityContactMechanismRepo, ContactMechanismRepo contactMechanismRepo, GeographicBoundaryRepo geographicBoundaryRepo, GeographicBoundaryTypeRepo geographicBoundaryTypeRepo, ContactMechanismGeographicBoundaryRepo contactMechanismGeographicBoundaryRepo, PartyContactMechanismRepo partyContactMechanismRepo, PartyContactMechanismPurposeRepo partyContactMechanismPurposeRepo, PartyContactMechanismPurposeTypeRepo partyContactMechanismPurposeTypeRepo, CommunicationEventPurposeTypeRepo communicationEventPurposeTypeRepo, CommunicationEventRoleTypeRepo communicationEventRoleTypeRepo) {

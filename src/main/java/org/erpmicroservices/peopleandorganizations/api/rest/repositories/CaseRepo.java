@@ -10,5 +10,6 @@ import java.util.UUID;
 @RepositoryRestResource
 public interface CaseRepo extends JpaRepository<Case, UUID> {
 
-    public List<Case> findAllByType_Description(String caseTypeDescription);
+    List<Case> findAllByType_Description(String caseTypeDescription);
+    List<Case> findAllByCaseStatus_Description(String caseStatusDescription);
 }
