@@ -1,6 +1,7 @@
 package behaviorTests.steps;
 
 import behaviorTests.CucumberSpringBootContext;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.Case;
@@ -16,6 +17,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
+import static org.erpmicroservices.peopleandorganizations.builders.DateTimeTestDataBuilder.zonedDateTimeNow;
+
 public class CaseSteps extends CucumberSpringBootContext {
 
     private final List<Case> expectedCases = new ArrayList<>();
@@ -24,6 +27,28 @@ public class CaseSteps extends CucumberSpringBootContext {
     private final Map<String, Integer> params;
     private final String url = "http://localhost:" + port;
     private List<Case> actualCases = new ArrayList<>();
+    private Case expectedCase = new Case();
+
+    @Given("there are {int} cases with a type of {string} with a status of {string} in the database")
+    public void there_are_cases_with_a_type_of_with_a_status_of_in_the_database(Integer numberOfCases, String caseTypeDescription, String caseStatusDescription) {
+        final CaseType caseType = caseTypeRepo.findByDescription(caseTypeDescription);
+        final CaseStatusType caseStatusType = caseStatusTypeRepo.findByDescription(caseStatusDescription);
+
+        for (int i = 0; i < numberOfCases; i++) {
+            expectedCases.add(caseRepo.save(Case.builder()
+                    .caseStatus(caseStatusType)
+                    .type(caseType)
+                    .description("there_are_cases_with_a_type_of_with_a_status_of_in_the_database " + i)
+                    .startedAt(zonedDateTimeNow())
+                    .build()));
+        }
+    }
+
+    @Given("a case description of {string}")
+    public void a_case_description_of(String string) {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
 
     @When("I search for all cases")
     public void i_search_for_all_cases() {
