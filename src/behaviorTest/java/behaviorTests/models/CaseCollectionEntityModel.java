@@ -1,4 +1,4 @@
-package behaviorTests.steps;
+package behaviorTests.models;
 
 import org.erpmicroservices.peopleandorganizations.api.rest.models.Case;
 import org.springframework.hateoas.CollectionModel;
