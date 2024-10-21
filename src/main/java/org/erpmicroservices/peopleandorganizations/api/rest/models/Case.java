@@ -7,7 +7,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -15,15 +14,25 @@ import java.util.UUID;
 @Entity
 @Table(name = "kase")
 @Data
-@Builder
+
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Case extends AbstractPersistable<UUID> {
+
+    @Builder
+    public Case(UUID id, String description, ZonedDateTime startedAt, CaseType type, CaseStatusType caseStatus) {
+        setId(id);
+        this.description = description;
+        this.startedAt = startedAt;
+        this.type = type;
+        this.caseStatus = caseStatus;
+    }
+
     private String description;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
+//    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private ZonedDateTime startedAt;
 
     @ManyToOne
