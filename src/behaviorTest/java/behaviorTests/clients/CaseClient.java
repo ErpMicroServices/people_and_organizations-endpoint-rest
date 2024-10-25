@@ -9,10 +9,7 @@ import org.erpmicroservices.peopleandorganizations.api.rest.models.CaseStatusTyp
 import org.erpmicroservices.peopleandorganizations.api.rest.models.CaseType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -52,6 +49,10 @@ public class CaseClient {
          return findCaseById(expectedCase.getId());
     }
 
+    public ResponseEntity<Void> delete(Case caseToDelete) {
+        return template.exchange(url + "/" + caseToDelete.getId(), HttpMethod.DELETE, null, Void.class);
+
+    }
 
     public @NotNull ResponseEntity<CaseCollectionEntityModel> getCaseCollectionEntityModelResponseEntity() {
         return template
@@ -131,5 +132,6 @@ public class CaseClient {
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new HttpEntity<>(stupidJson, headers);
     }
+
 
 }

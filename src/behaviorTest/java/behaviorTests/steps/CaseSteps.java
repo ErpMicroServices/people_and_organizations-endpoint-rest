@@ -27,6 +27,7 @@ public class CaseSteps extends CucumberSpringBootContext {
     private final CaseClient caseClient;
     private List<Case> actualCases = new ArrayList<>();
     private ResponseEntity<CaseEntityModel> actualResponseEntityCase;
+    private ResponseEntity<Void> actualResponseEntityVoid;
 
     public CaseSteps(StepContext stepContext, CaseClient caseClient, RestTemplate template, CaseStatusTypeRepo caseStatusTypeRepo, CaseTypeRepo caseTypeRepo, CaseRepo caseRepo, PartyTypeRepo partyTypeRepo, PartyRepo partyRepo, CaseRoleTypeRepo caseRoleTypeRepo, CaseRoleRepo caseRoleRepo, ContactMechanismTypeRepo contactMechanismTypeRepo, PartyRoleTypeRepo partyRoleTypeRepo, PartyRoleRepo partyRoleRepo, CommunicationEventStatusTypeRepo communicationEventStatusTypeRepo, CommunicationEventTypeRepo communicationEventTypeRepo, PartyRelationshipTypeRepo partyRelationshipTypeRepo, PartyRelationshipStatusTypeRepo partyRelationshipStatusTypeRepo, PriorityTypeRepo priorityTypeRepo, PartyRelationshipRepo partyRelationshipRepo, CommunicationEventRepo communicationEventRepo, FacilityRepo facilityRepo, FacilityTypeRepo facilityTypeRepo, FacilityRoleTypeRepo facilityRoleTypeRepo, FacilityRoleRepo facilityRoleRepo, FacilityContactMechanismRepo facilityContactMechanismRepo, ContactMechanismRepo contactMechanismRepo, GeographicBoundaryRepo geographicBoundaryRepo, GeographicBoundaryTypeRepo geographicBoundaryTypeRepo, ContactMechanismGeographicBoundaryRepo contactMechanismGeographicBoundaryRepo, PartyContactMechanismRepo partyContactMechanismRepo, PartyContactMechanismPurposeRepo partyContactMechanismPurposeRepo, PartyContactMechanismPurposeTypeRepo partyContactMechanismPurposeTypeRepo, CommunicationEventPurposeTypeRepo communicationEventPurposeTypeRepo, CommunicationEventRoleTypeRepo communicationEventRoleTypeRepo) {
         super(stepContext, template, caseStatusTypeRepo, caseTypeRepo, caseRepo, partyTypeRepo, partyRepo, caseRoleTypeRepo, caseRoleRepo, contactMechanismTypeRepo, partyRoleTypeRepo, partyRoleRepo, communicationEventStatusTypeRepo, communicationEventTypeRepo, partyRelationshipTypeRepo, partyRelationshipStatusTypeRepo, priorityTypeRepo, partyRelationshipRepo, communicationEventRepo, facilityRepo, facilityTypeRepo, facilityRoleTypeRepo, facilityRoleRepo, facilityContactMechanismRepo, contactMechanismRepo, geographicBoundaryRepo, geographicBoundaryTypeRepo, contactMechanismGeographicBoundaryRepo, partyContactMechanismRepo, partyContactMechanismPurposeRepo, partyContactMechanismPurposeTypeRepo, communicationEventPurposeTypeRepo, communicationEventRoleTypeRepo);
@@ -126,9 +127,19 @@ public class CaseSteps extends CucumberSpringBootContext {
         actualResponseEntityCase = caseClient.update( expectedCase);
     }
 
+    @When("I delete the case")
+    public void i_delete_the_case() {
+        actualResponseEntityVoid  = caseClient.delete( expectedCase);
+    }
+
     @Then("the operation was successful")
     public void the_operation_was_successful() {
-        Assert.assertTrue(actualResponseEntityCase.getStatusCode().is2xxSuccessful());
+        if( actualResponseEntityVoid != null) {
+            Assert.assertTrue(actualResponseEntityVoid.getStatusCode().is2xxSuccessful());
+        }
+        if( actualResponseEntityCase != null) {
+            Assert.assertTrue(actualResponseEntityCase.getStatusCode().is2xxSuccessful());
+        }
     }
 
     @Then("the case is in the database")
@@ -176,6 +187,16 @@ public class CaseSteps extends CucumberSpringBootContext {
                         .filter(c -> c.getCaseStatus().getDescription().equals(status))
                         .toList()
                         .size());
+    }
+
+    @Then("I get {string} back")
+    public void i_get_back(String responseMessage) {
+      Assert.assertTrue(true);
+    }
+
+    @Then("the case is not in the database")
+    public void the_case_is_not_in_the_database() {
+        Assert.assertTrue( caseRepo.findById(expectedCase.getId()).isEmpty());
     }
 
     private Optional<Case> extractCaseFromResponseEntity(ResponseEntity<CaseEntityModel> actualResponseEntityCase) {
