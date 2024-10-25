@@ -3,7 +3,7 @@ spring:
     name: People and Organizations Endpoint REST Behavior Test
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: validate
     properties:

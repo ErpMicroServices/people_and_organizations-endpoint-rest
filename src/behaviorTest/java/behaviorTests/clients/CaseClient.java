@@ -24,9 +24,7 @@ import java.util.UUID;
 @Component
 public class CaseClient {
     protected final RestTemplate template;
-    private final int offset = 0;
-    private final int limit = 10;
-    private final Map<String, Integer> params;
+    private final Map<String, String> params;
     //    @LocalServerPort
     protected int port = 8080;
     private final String url = "http://localhost:" + port;
@@ -34,8 +32,10 @@ public class CaseClient {
     public CaseClient(RestTemplate template) {
         this.template = template;
         params = new HashMap<>();
-        params.put("page", offset / limit);
-        params.put("size", limit);
+        int offset = 0;
+        int limit = 10;
+        params.put("page", String.valueOf(offset / limit));
+        params.put("size", String.valueOf(limit));
     }
 
     public ResponseEntity<CaseEntityModel> save(Case caseToSave) {
@@ -51,6 +51,11 @@ public class CaseClient {
         headers.setContentType(MediaType.APPLICATION_JSON);
         final HttpEntity<String> caseEntityModelHttpEntity = new HttpEntity<>(stupidJson, headers);
         return template.postForEntity(url + "/cases", caseEntityModelHttpEntity, CaseEntityModel.class);
+    }
+
+    public ResponseEntity<CaseEntityModel> findCaseById(UUID id) {
+
+        return template.getForEntity(url + "/cases/" +id.toString(), CaseEntityModel.class, params);
     }
 
     public @NotNull ResponseEntity<CaseCollectionEntityModel> getCaseCollectionEntityModelResponseEntity() {

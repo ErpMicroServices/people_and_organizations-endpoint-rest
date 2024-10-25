@@ -26,7 +26,7 @@ import static org.erpmicroservices.peopleandorganizations.builders.DateTimeTestD
 public class CaseSteps extends CucumberSpringBootContext {
 
     private final List<Case> expectedCases = new ArrayList<>();
-    private final Case expectedCase = new Case();
+    private Case expectedCase = new Case();
     private final CaseClient caseClient;
     private List<Case> actualCases = new ArrayList<>();
     private ResponseEntity<CaseEntityModel> actualResponseEntityCase;
@@ -72,6 +72,13 @@ public class CaseSteps extends CucumberSpringBootContext {
         expectedCase.setStartedAt(ZonedDateTime.parse(startedAt));
     }
 
+    @Given("the case is saved to the database")
+    public void the_case_is_saved_to_the_database() {
+        expectedCase.setCaseStatus(stepContext.caseStatusTypes.getFirst());
+        expectedCase.setType(stepContext.caseTypes.getFirst());
+        expectedCase = caseRepo.save(expectedCase);
+    }
+
     @When("I save the case")
     public void i_save_the_case() {
         actualResponseEntityCase = caseClient.save(expectedCase);
@@ -111,6 +118,11 @@ public class CaseSteps extends CucumberSpringBootContext {
         actualCases = caseRepo.findAllByCaseStatus_Description(caseStatusDescription);
     }
 
+    @When("I search for the case by id")
+    public void i_search_for_the_case_by_id() {
+        actualResponseEntityCase = caseClient.findCaseById( expectedCase.getId());
+    }
+
     @Then("the operation was successful")
     public void the_operation_was_successful() {
         Assert.assertTrue(actualResponseEntityCase.getStatusCode().is2xxSuccessful());
@@ -137,25 +149,6 @@ public class CaseSteps extends CucumberSpringBootContext {
 
     }
 
-    private Optional<Case> extractCaseFromResponseEntity(ResponseEntity<CaseEntityModel> actualResponseEntityCase) {
-        if (actualResponseEntityCase.hasBody()) {
-            final CaseEntityModel caseEntityModel = actualResponseEntityCase.getBody();
-            assert caseEntityModel != null;
-            if (caseEntityModel.getContent() != null) {
-                final Case aCase = caseEntityModel.getContent();
-                return Optional.of(Case.builder()
-                        .id(caseClient.getIdFromEntity(caseEntityModel))
-                        .description(aCase.getDescription())
-                        .startedAt(aCase.getStartedAt())
-                        .type(caseClient.getCaseTypeFromEntity(caseEntityModel).orElseThrow())
-                        .caseStatus(caseClient.getCaseStatusTypeFromEntity(caseEntityModel).orElseThrow())
-                        .build());
-            }
-            return Optional.empty();
-        }
-        return Optional.empty();
-    }
-
     @Then("I get {int} cases")
     public void i_get_cases(Integer numberOfCases) {
         Assert.assertEquals(numberOfCases.longValue(), actualCases.size());
@@ -180,5 +173,24 @@ public class CaseSteps extends CucumberSpringBootContext {
                         .filter(c -> c.getCaseStatus().getDescription().equals(status))
                         .toList()
                         .size());
+    }
+
+    private Optional<Case> extractCaseFromResponseEntity(ResponseEntity<CaseEntityModel> actualResponseEntityCase) {
+        if (actualResponseEntityCase.hasBody()) {
+            final CaseEntityModel caseEntityModel = actualResponseEntityCase.getBody();
+            assert caseEntityModel != null;
+            if (caseEntityModel.getContent() != null) {
+                final Case aCase = caseEntityModel.getContent();
+                return Optional.of(Case.builder()
+                        .id(caseClient.getIdFromEntity(caseEntityModel))
+                        .description(aCase.getDescription())
+                        .startedAt(aCase.getStartedAt())
+                        .type(caseClient.getCaseTypeFromEntity(caseEntityModel).orElseThrow())
+                        .caseStatus(caseClient.getCaseStatusTypeFromEntity(caseEntityModel).orElseThrow())
+                        .build());
+            }
+            return Optional.empty();
+        }
+        return Optional.empty();
     }
 }
