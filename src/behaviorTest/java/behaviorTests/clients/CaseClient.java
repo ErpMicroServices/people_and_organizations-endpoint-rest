@@ -16,10 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Component
 public class CaseClient {
@@ -27,7 +24,8 @@ public class CaseClient {
     private final Map<String, String> params;
     //    @LocalServerPort
     protected int port = 8080;
-    private final String url = "http://localhost:" + port;
+    private final String baseUrl = "http://localhost:" + port;
+    private final String url = baseUrl + "/cases";
 
     public CaseClient(RestTemplate template) {
         this.template = template;
@@ -39,28 +37,25 @@ public class CaseClient {
     }
 
     public ResponseEntity<CaseEntityModel> save(Case caseToSave) {
-        String stupidJson = """
-                  {
-                  "description": "%s",
-                  "startedAt": "%s",
-                  "caseStatus": "http://localhost:8080/caseStatusTypes/%s",
-                  "type": "http://localhost:8080/caseTypes/%s"
-                }
-                """.formatted(caseToSave.getDescription(), caseToSave.getStartedAt(), caseToSave.getCaseStatus().getId(), caseToSave.getType().getId());
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        final HttpEntity<String> caseEntityModelHttpEntity = new HttpEntity<>(stupidJson, headers);
-        return template.postForEntity(url + "/cases", caseEntityModelHttpEntity, CaseEntityModel.class);
+        final HttpEntity<String> caseEntityModelHttpEntity = convertCaseToHttpStringEntity(caseToSave);
+        return template.postForEntity(url, caseEntityModelHttpEntity, CaseEntityModel.class);
     }
+
 
     public ResponseEntity<CaseEntityModel> findCaseById(UUID id) {
 
-        return template.getForEntity(url + "/cases/" +id.toString(), CaseEntityModel.class, params);
+        return template.getForEntity(url + "/" + id.toString(), CaseEntityModel.class, params);
     }
+
+    public ResponseEntity<CaseEntityModel> update(Case expectedCase) {
+         template.put(url + "/" + Objects.requireNonNull(expectedCase.getId()).toString(), convertCaseToHttpStringEntity(expectedCase));
+         return findCaseById(expectedCase.getId());
+    }
+
 
     public @NotNull ResponseEntity<CaseCollectionEntityModel> getCaseCollectionEntityModelResponseEntity() {
         return template
-                .getForEntity(url + "/cases", CaseCollectionEntityModel.class, params);
+                .getForEntity(url, CaseCollectionEntityModel.class, params);
     }
 
     public Optional<CaseStatusType> getCaseStatusTypeFromEntity(EntityModel<Case> aCaseEntity) {
@@ -118,6 +113,23 @@ public class CaseClient {
         final String self = aCaseEntity.getLinks("self").stream().findFirst().orElseThrow().getHref();
         final String selfId = self.substring(self.lastIndexOf('/') + 1);
         return UUID.fromString(selfId);
+    }
+
+    private static @NotNull HttpEntity<String> convertCaseToHttpStringEntity(Case caseToSave) {
+        String stupidJson = """
+                  {
+                  "description": "%s",
+                  "startedAt": "%s",
+                  "caseStatus": "http://localhost:8080/caseStatusTypes/%s",
+                  "type": "http://localhost:8080/caseTypes/%s"
+                }
+                """.formatted(caseToSave.getDescription(),
+                caseToSave.getStartedAt(),
+                caseToSave.getCaseStatus().getId(),
+                caseToSave.getType().getId());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new HttpEntity<>(stupidJson, headers);
     }
 
 }

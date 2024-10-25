@@ -16,10 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.erpmicroservices.peopleandorganizations.builders.DateTimeTestDataBuilder.zonedDateTimeNow;
 
@@ -120,7 +117,13 @@ public class CaseSteps extends CucumberSpringBootContext {
 
     @When("I search for the case by id")
     public void i_search_for_the_case_by_id() {
-        actualResponseEntityCase = caseClient.findCaseById( expectedCase.getId());
+        actualResponseEntityCase = caseClient.findCaseById(Objects.requireNonNull(expectedCase.getId()));
+    }
+
+    @When("I update the case description to {string}")
+    public void i_update_the_case_description_to(String newCaseDescription) {
+        expectedCase.setDescription(newCaseDescription);
+        actualResponseEntityCase = caseClient.update( expectedCase);
     }
 
     @Then("the operation was successful")
