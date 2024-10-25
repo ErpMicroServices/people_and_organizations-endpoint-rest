@@ -7,9 +7,10 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import java.util.List;
 import java.util.UUID;
 
-@RepositoryRestResource
+@RepositoryRestResource()
 public interface CaseRepo extends JpaRepository<Case, UUID> {
 
     List<Case> findAllByType_Description(String caseTypeDescription);
+
     List<Case> findAllByCaseStatus_Description(String caseStatusDescription);
 }

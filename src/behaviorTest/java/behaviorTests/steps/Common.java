@@ -18,29 +18,31 @@ import java.util.List;
 import static org.junit.Assert.fail;
 
 public class Common extends CucumberSpringBootContext {
-    private final List<CaseType> caseTypes = new ArrayList<>();
 
-    public Common(RestTemplate template, CaseTypeRepo caseTypeRepo, CaseStatusTypeRepo caseStatusTypeRepo, PartyContactMechanismRepo partyContactMechanismRepo, ContactMechanismRepo contactMechanismRepo, ContactMechanismGeographicBoundaryRepo contactMechanismGeographicBoundaryRepo, CommunicationEventPurposeTypeRepo communicationEventPurposeTypeRepo, CaseRepo caseRepo, PartyTypeRepo partyTypeRepo, PartyRelationshipStatusTypeRepo partyRelationshipStatusTypeRepo, FacilityRoleRepo facilityRoleRepo, PartyRepo partyRepo, CaseRoleTypeRepo caseRoleTypeRepo, PartyRelationshipTypeRepo partyRelationshipTypeRepo, CommunicationEventRepo communicationEventRepo, FacilityRoleTypeRepo facilityRoleTypeRepo, GeographicBoundaryRepo geographicBoundaryRepo, CommunicationEventTypeRepo communicationEventTypeRepo, CaseRoleRepo caseRoleRepo, PartyContactMechanismPurposeRepo partyContactMechanismPurposeRepo, ContactMechanismTypeRepo contactMechanismTypeRepo, FacilityContactMechanismRepo facilityContactMechanismRepo, PartyRoleTypeRepo partyRoleTypeRepo, PartyRoleRepo partyRoleRepo, FacilityTypeRepo facilityTypeRepo, GeographicBoundaryTypeRepo geographicBoundaryTypeRepo, CommunicationEventStatusTypeRepo communicationEventStatusTypeRepo, PartyRelationshipRepo partyRelationshipRepo, PartyContactMechanismPurposeTypeRepo partyContactMechanismPurposeTypeRepo, CommunicationEventRoleTypeRepo communicationEventRoleTypeRepo, PriorityTypeRepo priorityTypeRepo, FacilityRepo facilityRepo) {
-        super(template, caseStatusTypeRepo, caseTypeRepo, caseRepo, partyTypeRepo, partyRepo, caseRoleTypeRepo, caseRoleRepo, contactMechanismTypeRepo, partyRoleTypeRepo, partyRoleRepo, communicationEventStatusTypeRepo, communicationEventTypeRepo, partyRelationshipTypeRepo, partyRelationshipStatusTypeRepo, priorityTypeRepo, partyRelationshipRepo, communicationEventRepo, facilityRepo, facilityTypeRepo, facilityRoleTypeRepo, facilityRoleRepo, facilityContactMechanismRepo, contactMechanismRepo, geographicBoundaryRepo, geographicBoundaryTypeRepo, contactMechanismGeographicBoundaryRepo, partyContactMechanismRepo, partyContactMechanismPurposeRepo, partyContactMechanismPurposeTypeRepo, communicationEventPurposeTypeRepo, communicationEventRoleTypeRepo);
-    }
 
     public static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(
             DockerImageName.parse("erpmicroservices/people_and_organizations-database:latest")
                     .asCompatibleSubstituteFor("postgres"));
 
+    public Common(StepContext stepContext, RestTemplate template, CaseTypeRepo caseTypeRepo, CaseStatusTypeRepo caseStatusTypeRepo, PartyContactMechanismRepo partyContactMechanismRepo, ContactMechanismRepo contactMechanismRepo, ContactMechanismGeographicBoundaryRepo contactMechanismGeographicBoundaryRepo, CommunicationEventPurposeTypeRepo communicationEventPurposeTypeRepo, CaseRepo caseRepo, PartyTypeRepo partyTypeRepo, PartyRelationshipStatusTypeRepo partyRelationshipStatusTypeRepo, FacilityRoleRepo facilityRoleRepo, PartyRepo partyRepo, CaseRoleTypeRepo caseRoleTypeRepo, PartyRelationshipTypeRepo partyRelationshipTypeRepo, CommunicationEventRepo communicationEventRepo, FacilityRoleTypeRepo facilityRoleTypeRepo, GeographicBoundaryRepo geographicBoundaryRepo, CommunicationEventTypeRepo communicationEventTypeRepo, CaseRoleRepo caseRoleRepo, PartyContactMechanismPurposeRepo partyContactMechanismPurposeRepo, ContactMechanismTypeRepo contactMechanismTypeRepo, FacilityContactMechanismRepo facilityContactMechanismRepo, PartyRoleTypeRepo partyRoleTypeRepo, PartyRoleRepo partyRoleRepo, FacilityTypeRepo facilityTypeRepo, GeographicBoundaryTypeRepo geographicBoundaryTypeRepo, CommunicationEventStatusTypeRepo communicationEventStatusTypeRepo, PartyRelationshipRepo partyRelationshipRepo, PartyContactMechanismPurposeTypeRepo partyContactMechanismPurposeTypeRepo, CommunicationEventRoleTypeRepo communicationEventRoleTypeRepo, PriorityTypeRepo priorityTypeRepo, FacilityRepo facilityRepo) {
+        super(stepContext, template, caseStatusTypeRepo, caseTypeRepo, caseRepo, partyTypeRepo, partyRepo, caseRoleTypeRepo, caseRoleRepo, contactMechanismTypeRepo, partyRoleTypeRepo, partyRoleRepo, communicationEventStatusTypeRepo, communicationEventTypeRepo, partyRelationshipTypeRepo, partyRelationshipStatusTypeRepo, priorityTypeRepo, partyRelationshipRepo, communicationEventRepo, facilityRepo, facilityTypeRepo, facilityRoleTypeRepo, facilityRoleRepo, facilityContactMechanismRepo, contactMechanismRepo, geographicBoundaryRepo, geographicBoundaryTypeRepo, contactMechanismGeographicBoundaryRepo, partyContactMechanismRepo, partyContactMechanismPurposeRepo, partyContactMechanismPurposeTypeRepo, communicationEventPurposeTypeRepo, communicationEventRoleTypeRepo);
+    }
+
     @BeforeAll
     public static void setupWorld() {
-        postgreSQLContainer.start();
+//        postgreSQLContainer.start();
     }
 
     @AfterAll
     public static void tearDownWorld() {
-        postgreSQLContainer.stop();
+//        postgreSQLContainer.stop();
     }
 
     @Before
     public void setupTheScenario() {
         theDatabaseIsEmpty();
+        stepContext.caseStatusTypes = new ArrayList<>();
+        stepContext.caseTypes = new ArrayList<>();
     }
 
     @Given("the following types:")
@@ -49,12 +51,20 @@ public class Common extends CucumberSpringBootContext {
         dataTableLists
                 .forEach(row -> {
                     switch (row.get(0)) {
-                        case "case" -> caseTypeRepo.save(CaseType.builder()
-                                .description(row.get(1))
-                                .build());
-                        case "case status" -> caseStatusTypeRepo.save(CaseStatusType.builder()
-                                .description(row.get(1))
-                                .build());
+                        case "case" -> {
+                            final CaseType caseType = caseTypeRepo.save(CaseType.builder()
+                                    .description(row.get(1))
+                                    .build()
+                            );
+                            stepContext.caseTypes.add(caseType);
+                        }
+                        case "case status" -> {
+                            final CaseStatusType caseStatusType = caseStatusTypeRepo.save(CaseStatusType.builder()
+                                    .description(row.get(1))
+                                    .build()
+                            );
+                            stepContext.caseStatusTypes.add(caseStatusType);
+                        }
                         default -> fail("Unknown type: " + row);
 
                     }

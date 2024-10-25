@@ -2,6 +2,7 @@ package behaviorTests;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -23,15 +24,16 @@ public class TestRestTemplateConfig {
 
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
                 false);
-        mapper.registerModule(new Jackson2HalModule());
-
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        converter.setSupportedMediaTypes(List.of(MediaTypes.HAL_JSON));
-        converter.setObjectMapper(mapper);
-
-        return builder.messageConverters(converter).build();
+        objectMapper.registerModule(new Jackson2HalModule());
+        objectMapper.registerModule(new JavaTimeModule());
+        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(List.of(MediaTypes.HAL_JSON));
+        mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);
+        builder.messageConverters(mappingJackson2HttpMessageConverter);
+        return builder.build();
     }
+
 }

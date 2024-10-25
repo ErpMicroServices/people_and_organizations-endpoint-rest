@@ -6,7 +6,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.util.ArrayList;
@@ -15,22 +18,30 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class CaseType extends AbstractPersistable<UUID> {
+
     @NotBlank
     @NotNull
     private String description;
-
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private CaseType parent;
-
     @OneToMany(mappedBy = "parent")
-    @Builder.Default
     private List<CaseType> children = new ArrayList<>();
+
+    @Builder
+    public CaseType(UUID id, String description, CaseType parent, List<CaseType> children) {
+        setId(id);
+        this.description = description;
+        this.parent = parent;
+        this.children = children;
+    }
+
+    public CaseType() {
+
+    }
 
     public boolean isAParent() {
         return !children.isEmpty();
