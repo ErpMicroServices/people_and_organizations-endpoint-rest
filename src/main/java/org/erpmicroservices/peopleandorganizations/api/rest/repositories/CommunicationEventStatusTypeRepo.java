@@ -15,4 +15,6 @@ public interface CommunicationEventStatusTypeRepo extends JpaRepository<Communic
 
 
     Page<CommunicationEventStatusType> findCommunicationEventStatusTypeByParentId(UUID parent_id, Pageable pageable);
+
+    CommunicationEventStatusType findByDescription( String description );
 }

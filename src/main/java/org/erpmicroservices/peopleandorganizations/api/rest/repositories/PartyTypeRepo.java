@@ -14,4 +14,6 @@ public interface PartyTypeRepo extends JpaRepository<PartyType, UUID> {
     Page<PartyType> findPartyTypesByParentIdIsNull(Pageable page);
 
     Page<PartyType> findPartyTypesByParentId(UUID parent_id, Pageable pageable);
+
+    PartyType findByDescription(String partyTypeDescription);
 }

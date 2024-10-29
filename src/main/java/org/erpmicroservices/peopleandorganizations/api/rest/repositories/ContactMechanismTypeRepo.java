@@ -9,4 +9,5 @@ import java.util.UUID;
 @RepositoryRestResource
 public interface ContactMechanismTypeRepo extends JpaRepository<ContactMechanismType, UUID> {
 
+    ContactMechanismType findByDescription(String description);
 }

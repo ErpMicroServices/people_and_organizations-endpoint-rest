@@ -18,37 +18,46 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 public class Party extends AbstractPersistable<UUID> {
 
- @NotNull
- @NotBlank
- private String comment;
+    @NotNull
+    @NotBlank
+    private String comment;
 
- @ManyToOne
- @JoinColumn(name = "party_type_id")
- private PartyType type;
+    @ManyToOne
+    @JoinColumn(name = "party_type_id")
+    private PartyType type;
 
- @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
- @JoinColumn(name = "party_id")
- @Builder.Default
- private List<PartyClassification> classifications = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "party_id")
+    @Builder.Default
+    private List<PartyClassification> classifications = new ArrayList<>();
 
- @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
- @JoinColumn(name = "party_id")
- @Builder.Default
- private List<PartyRole> roles = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "party_id")
+    @Builder.Default
+    private List<PartyRole> roles = new ArrayList<>();
 
- @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
- @JoinColumn(name = "party_id")
- @Builder.Default
- private List<PartyContactMechanism> contactMechanisms = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "party_id")
+    @Builder.Default
+    private List<PartyContactMechanism> contactMechanisms = new ArrayList<>();
 
- @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
- @JoinColumn(name = "party_id")
- @Builder.Default
- private List<PartyName> names = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "party_id")
+    @Builder.Default
+    private List<PartyName> names = new ArrayList<>();
 
- @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
- @JoinColumn(name = "party_id")
- @Builder.Default
- private List<PartyName> identifications = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "party_id")
+    @Builder.Default
+    private List<PartyName> identifications = new ArrayList<>();
 
+    public void addRole(PartyRole partyRole) {
+        this.roles.add(partyRole);
+        partyRole.setOwner(this);
+    }
+
+    public void removeRole(PartyRole partyRole) {
+        this.roles.remove(partyRole);
+        partyRole.setOwner(null);
+    }
 }

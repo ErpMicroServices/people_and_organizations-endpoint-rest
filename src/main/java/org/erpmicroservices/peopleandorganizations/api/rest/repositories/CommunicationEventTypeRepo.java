@@ -9,4 +9,5 @@ import java.util.UUID;
 @RepositoryRestResource
 public interface CommunicationEventTypeRepo extends JpaRepository<CommunicationEventType, UUID> {
 
+    CommunicationEventType findByDescription(String description);
 }

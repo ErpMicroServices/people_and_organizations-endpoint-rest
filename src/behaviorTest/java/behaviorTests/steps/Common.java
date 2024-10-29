@@ -38,11 +38,25 @@ public class Common extends CucumberSpringBootContext {
 //        postgreSQLContainer.stop();
     }
 
+
     @Before
     public void setupTheScenario() {
         theDatabaseIsEmpty();
+        // For some reason the stepcontext isn't getting initialized by spring.
         stepContext.caseStatusTypes = new ArrayList<>();
         stepContext.caseTypes = new ArrayList<>();
+        stepContext.communicationEventRoleTypes = new ArrayList<>();
+        stepContext.communicationEventStatusTypes = new ArrayList<>();
+        stepContext.communicationEventTypes = new ArrayList<>();
+        stepContext.contactMechanismTypes = new ArrayList<>();
+        stepContext.partyTypes = new ArrayList<>();
+        stepContext.partyRoleTypes = new ArrayList<>();
+        stepContext.partyRelationshipTypes = new ArrayList<>();
+        stepContext.partyRelationshipStatusTypes = new ArrayList<>();
+        stepContext.parties = new ArrayList<>();
+        stepContext.priorityTypes = new ArrayList<>();
+        stepContext.expectedCases = new ArrayList<>();
+        stepContext.expectedCase = new Case();
     }
 
     @Given("the following types:")
@@ -65,6 +79,51 @@ public class Common extends CucumberSpringBootContext {
                             );
                             stepContext.caseStatusTypes.add(caseStatusType);
                         }
+                        case "party" -> {
+                            stepContext.partyTypes.add(partyTypeRepo.save(PartyType.builder()
+                                    .description(row.get(1))
+                                    .build()));
+                        }
+                        case "communication event" -> {
+                            stepContext.communicationEventTypes.add(communicationEventTypeRepo.save(CommunicationEventType.builder()
+                                    .description(row.get(1))
+                                    .build()));
+                        }
+                        case "communication event role" -> {
+                            stepContext.communicationEventRoleTypes.add(communicationEventRoleTypeRepo.save(CommunicationEventRoleType.builder()
+                                    .description(row.get(1))
+                                    .build()));
+                        }
+                        case "communication event status" -> {
+                            stepContext.communicationEventStatusTypes.add(communicationEventStatusTypeRepo.save(CommunicationEventStatusType.builder()
+                                    .description(row.get(1))
+                                    .build()));
+                        }
+                        case "contact mechanism" -> {
+                            stepContext.contactMechanismTypes.add(contactMechanismTypeRepo.save(ContactMechanismType.builder()
+                                    .description(row.get(1))
+                                    .build()));
+                        }
+                        case "party role" -> {
+                            stepContext.partyRoleTypes.add(partyRoleTypeRepo.save(PartyRoleType.builder()
+                                    .description(row.get(1))
+                                    .build()));
+                        }
+                        case "party relationship" -> {
+                            stepContext.partyRelationshipTypes.add(partyRelationshipTypeRepo.save(PartyRelationshipType.builder()
+                                    .description(row.get(1))
+                                    .build()));
+                        }
+                        case "party relationship status" -> {
+                            stepContext.partyRelationshipStatusTypes.add(partyRelationshipStatusTypeRepo.save(PartyRelationshipStatusType.builder()
+                                    .description(row.get(1))
+                                    .build()));
+                        }
+                        case "priority" -> {
+                            stepContext.priorityTypes.add(priorityTypeRepo.save(PriorityType.builder()
+                                    .description(row.get(1))
+                                    .build()));
+                        }
                         default -> fail("Unknown type: " + row);
 
                     }
@@ -73,9 +132,10 @@ public class Common extends CucumberSpringBootContext {
 
     private void theDatabaseIsEmpty() {
         communicationEventRepo.deleteAll();
+        communicationEventTypeRepo.deleteAll();
         partyRelationshipRepo.deleteAll();
-        caseRoleRepo.deleteAll();
         partyRoleRepo.deleteAll();
+        caseRoleRepo.deleteAll();
         facilityRoleRepo.deleteAll();
         facilityContactMechanismRepo.deleteAll();
         partyContactMechanismRepo.deleteAll();
@@ -86,7 +146,6 @@ public class Common extends CucumberSpringBootContext {
 
         partyRepo.deleteAll();
         caseRepo.deleteAll();
-        communicationEventRepo.deleteAll();
         facilityRepo.deleteAll();
 
         caseRoleTypeRepo.deleteAll(caseRoleTypeRepo.findCaseRoleTypeByParentIdIsNotNull(Pageable.unpaged()).stream().toList());
@@ -133,8 +192,10 @@ public class Common extends CucumberSpringBootContext {
     }
 
     private void deleteCommunicationEventStatusTypeChildren(CommunicationEventStatusType root) {
-        communicationEventStatusTypeRepo.findCommunicationEventStatusTypeByParentId(root.getParent().getId(), Pageable.unpaged()).stream()
-                .forEach(this::deleteCommunicationEventStatusTypeChildren);
+        if (root.getParent() != null) {
+            communicationEventStatusTypeRepo.findCommunicationEventStatusTypeByParentId(root.getParent().getId(), Pageable.unpaged()).stream()
+                    .forEach(this::deleteCommunicationEventStatusTypeChildren);
+        }
         communicationEventStatusTypeRepo.delete(root);
     }
 

@@ -1,8 +1,10 @@
 package behaviorTests.steps;
 
+import behaviorTests.models.CaseEntityModel;
 import io.cucumber.spring.ScenarioScope;
-import org.erpmicroservices.peopleandorganizations.api.rest.models.CaseStatusType;
-import org.erpmicroservices.peopleandorganizations.api.rest.models.CaseType;
+import org.erpmicroservices.peopleandorganizations.api.rest.models.*;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -11,12 +13,30 @@ import java.util.List;
 @Component
 @ScenarioScope
 public class StepContext {
-    public List<CaseType> caseTypes;
-    public List<CaseStatusType> caseStatusTypes;
+
+    public List<CaseType> caseTypes = new ArrayList<>();
+    public List<CaseStatusType> caseStatusTypes = new ArrayList<>();
+    public List<PartyType> partyTypes = new ArrayList<>();
+    public List<PartyRoleType> partyRoleTypes = new ArrayList<>();
+    public List<CommunicationEventType> communicationEventTypes = new ArrayList<>();
+    public List<CommunicationEventRoleType> communicationEventRoleTypes = new ArrayList<>();
+    public List<PartyRelationshipType> partyRelationshipTypes = new ArrayList<>();
+    public List<PartyRelationshipStatusType> partyRelationshipStatusTypes = new ArrayList<>();
+    public List<CommunicationEventStatusType> communicationEventStatusTypes = new ArrayList<>();
+    public List<ContactMechanismType> contactMechanismTypes = new ArrayList<>();
+    public List<PriorityType> priorityTypes = new ArrayList<>();
+    public List<Party> parties = new ArrayList<>();
+    public PartyRelationship expectedPartyRelationship;
+    public Pageable pageable = Pageable.unpaged();
+    public List<Case> expectedCases = new ArrayList<>();
+    public Case expectedCase = new Case();
+    public List<Case> actualCases = new ArrayList<>();
+    public ResponseEntity<CaseEntityModel> actualResponseEntityCase;
+    public ResponseEntity<Void> actualResponseEntityVoid;
+    public CommunicationEvent expectedCommunicationEvent;
 
     public StepContext() {
-        this.caseTypes = new ArrayList<>();
-        this.caseStatusTypes = new ArrayList<>();
+        caseTypes = new ArrayList<>();
     }
 }
 

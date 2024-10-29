@@ -14,4 +14,6 @@ public interface PartyRoleTypeRepo extends JpaRepository<PartyRoleType, UUID> {
     Page<PartyRoleType> findPartyRoleTypesByParentIdIsNull(Pageable page);
 
     Page <PartyRoleType> findPartyRoleTypesByParentId(UUID id, Pageable unpaged);
+
+    PartyRoleType findByDescription(String partyRoleTypeDescription);
 }

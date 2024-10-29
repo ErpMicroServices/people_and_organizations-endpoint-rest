@@ -19,6 +19,10 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 public class PartyRole extends AbstractPersistable<UUID> {
 
+ @ManyToOne(fetch = FetchType.LAZY)
+ @JoinColumn(name = "party_id")
+ private Party owner;
+
  @ManyToOne
  @JoinColumn(name = "party_role_type_id")
  private PartyRoleType type;

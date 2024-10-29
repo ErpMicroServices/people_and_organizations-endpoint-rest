@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+
 @CucumberContextConfiguration
 @ContextConfiguration(classes = PeopleAndOrganizationsApiRestApplication.class)
 @SpringBootTest(classes = TestRestTemplateConfig.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -80,5 +82,6 @@ public class CucumberSpringBootContext {
         this.partyContactMechanismPurposeTypeRepo = partyContactMechanismPurposeTypeRepo;
         this.communicationEventPurposeTypeRepo = communicationEventPurposeTypeRepo;
         this.communicationEventRoleTypeRepo = communicationEventRoleTypeRepo;
+
     }
 }

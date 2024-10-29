@@ -9,4 +9,5 @@ import java.util.UUID;
 @RepositoryRestResource
 public interface PartyRelationshipTypeRepo extends JpaRepository<PartyRelationshipType, UUID> {
 
+    PartyRelationshipType findByDescription(String relationshipTypeDescription);
 }

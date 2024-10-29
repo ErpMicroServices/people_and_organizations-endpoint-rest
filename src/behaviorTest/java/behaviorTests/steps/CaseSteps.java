@@ -22,12 +22,7 @@ import static org.erpmicroservices.peopleandorganizations.builders.DateTimeTestD
 
 public class CaseSteps extends CucumberSpringBootContext {
 
-    private final List<Case> expectedCases = new ArrayList<>();
-    private Case expectedCase = new Case();
-    private final CaseClient caseClient;
-    private List<Case> actualCases = new ArrayList<>();
-    private ResponseEntity<CaseEntityModel> actualResponseEntityCase;
-    private ResponseEntity<Void> actualResponseEntityVoid;
+    private CaseClient caseClient;
 
     public CaseSteps(StepContext stepContext, CaseClient caseClient, RestTemplate template, CaseStatusTypeRepo caseStatusTypeRepo, CaseTypeRepo caseTypeRepo, CaseRepo caseRepo, PartyTypeRepo partyTypeRepo, PartyRepo partyRepo, CaseRoleTypeRepo caseRoleTypeRepo, CaseRoleRepo caseRoleRepo, ContactMechanismTypeRepo contactMechanismTypeRepo, PartyRoleTypeRepo partyRoleTypeRepo, PartyRoleRepo partyRoleRepo, CommunicationEventStatusTypeRepo communicationEventStatusTypeRepo, CommunicationEventTypeRepo communicationEventTypeRepo, PartyRelationshipTypeRepo partyRelationshipTypeRepo, PartyRelationshipStatusTypeRepo partyRelationshipStatusTypeRepo, PriorityTypeRepo priorityTypeRepo, PartyRelationshipRepo partyRelationshipRepo, CommunicationEventRepo communicationEventRepo, FacilityRepo facilityRepo, FacilityTypeRepo facilityTypeRepo, FacilityRoleTypeRepo facilityRoleTypeRepo, FacilityRoleRepo facilityRoleRepo, FacilityContactMechanismRepo facilityContactMechanismRepo, ContactMechanismRepo contactMechanismRepo, GeographicBoundaryRepo geographicBoundaryRepo, GeographicBoundaryTypeRepo geographicBoundaryTypeRepo, ContactMechanismGeographicBoundaryRepo contactMechanismGeographicBoundaryRepo, PartyContactMechanismRepo partyContactMechanismRepo, PartyContactMechanismPurposeRepo partyContactMechanismPurposeRepo, PartyContactMechanismPurposeTypeRepo partyContactMechanismPurposeTypeRepo, CommunicationEventPurposeTypeRepo communicationEventPurposeTypeRepo, CommunicationEventRoleTypeRepo communicationEventRoleTypeRepo) {
         super(stepContext, template, caseStatusTypeRepo, caseTypeRepo, caseRepo, partyTypeRepo, partyRepo, caseRoleTypeRepo, caseRoleRepo, contactMechanismTypeRepo, partyRoleTypeRepo, partyRoleRepo, communicationEventStatusTypeRepo, communicationEventTypeRepo, partyRelationshipTypeRepo, partyRelationshipStatusTypeRepo, priorityTypeRepo, partyRelationshipRepo, communicationEventRepo, facilityRepo, facilityTypeRepo, facilityRoleTypeRepo, facilityRoleRepo, facilityContactMechanismRepo, contactMechanismRepo, geographicBoundaryRepo, geographicBoundaryTypeRepo, contactMechanismGeographicBoundaryRepo, partyContactMechanismRepo, partyContactMechanismPurposeRepo, partyContactMechanismPurposeTypeRepo, communicationEventPurposeTypeRepo, communicationEventRoleTypeRepo);
@@ -40,7 +35,7 @@ public class CaseSteps extends CucumberSpringBootContext {
         final CaseStatusType caseStatusType = caseStatusTypeRepo.findByDescription(caseStatusDescription);
 
         for (int i = 0; i < numberOfCases; i++) {
-            expectedCases.add(caseRepo.save(Case.builder()
+            stepContext.expectedCases.add(caseRepo.save(Case.builder()
                     .caseStatus(caseStatusType)
                     .type(caseType)
                     .description("there_are_cases_with_a_type_of_with_a_status_of_in_the_database " + i)
@@ -51,42 +46,42 @@ public class CaseSteps extends CucumberSpringBootContext {
 
     @Given("a case description of {string}")
     public void a_case_description_of(String description) {
-        expectedCase.setDescription(description);
+        stepContext.expectedCase.setDescription(description);
     }
 
     @Given("a case status of {string}")
     public void a_case_status_of(String caseStatusDescription) {
         final CaseStatusType caseStatusType = stepContext.caseStatusTypes.stream().filter(status -> status.getDescription().equals(caseStatusDescription)).findFirst().orElseThrow();
-        expectedCase.setCaseStatus(caseStatusType);
+        stepContext.expectedCase.setCaseStatus(caseStatusType);
     }
 
     @Given("a case type of {string}")
     public void a_case_type_of(String typeDescription) {
-        expectedCase.setType(stepContext.caseTypes.stream().filter(type -> type.getDescription().equals(typeDescription)).findFirst().orElseThrow());
+        stepContext.expectedCase.setType(stepContext.caseTypes.stream().filter(type -> type.getDescription().equals(typeDescription)).findFirst().orElseThrow());
     }
 
     @Given("a case was started at {string}")
     public void a_case_was_started_at(String startedAt) {
-        expectedCase.setStartedAt(ZonedDateTime.parse(startedAt));
+        stepContext.expectedCase.setStartedAt(ZonedDateTime.parse(startedAt));
     }
 
     @Given("the case is saved to the database")
     public void the_case_is_saved_to_the_database() {
-        expectedCase.setCaseStatus(stepContext.caseStatusTypes.getFirst());
-        expectedCase.setType(stepContext.caseTypes.getFirst());
-        expectedCase = caseRepo.save(expectedCase);
+        stepContext.expectedCase.setCaseStatus(stepContext.caseStatusTypes.getFirst());
+        stepContext.expectedCase.setType(stepContext.caseTypes.getFirst());
+        stepContext.expectedCase = caseRepo.save(stepContext.expectedCase);
     }
 
     @When("I save the case")
     public void i_save_the_case() {
-        actualResponseEntityCase = caseClient.save(expectedCase);
+        stepContext.actualResponseEntityCase = caseClient.save(stepContext.expectedCase);
     }
 
     @When("I search for all cases")
     public void i_search_for_all_cases() {
 
         final ResponseEntity<CaseCollectionEntityModel> caseCollectionModelResponseEntity = caseClient.getCaseCollectionEntityModelResponseEntity();
-        actualCases = Optional.ofNullable(caseCollectionModelResponseEntity.getBody())
+        stepContext.actualCases = Optional.ofNullable(caseCollectionModelResponseEntity.getBody())
                 .map(entity -> entity.getContent().stream()
                         .map(aCaseEntity -> {
                             final CaseType caseType = caseClient.getCaseTypeFromEntity(aCaseEntity).orElseThrow();
@@ -108,56 +103,58 @@ public class CaseSteps extends CucumberSpringBootContext {
 
     @When("I search for cases of type {string}")
     public void i_search_for_cases_of_type(String caseTypeDescription) {
-        actualCases = caseRepo.findAllByType_Description(caseTypeDescription);
+        stepContext.actualCases = caseRepo.findAllByType_Description(caseTypeDescription);
     }
 
     @When("I search for cases with a status of {string}")
     public void i_search_for_cases_with_a_status_of(String caseStatusDescription) {
-        actualCases = caseRepo.findAllByCaseStatus_Description(caseStatusDescription);
+        stepContext.actualCases = caseRepo.findAllByCaseStatus_Description(caseStatusDescription);
     }
 
     @When("I search for the case by id")
     public void i_search_for_the_case_by_id() {
-        actualResponseEntityCase = caseClient.findCaseById(Objects.requireNonNull(expectedCase.getId()));
+        stepContext.actualResponseEntityCase = caseClient.findCaseById(Objects.requireNonNull(stepContext.expectedCase.getId()));
     }
 
     @When("I update the case description to {string}")
     public void i_update_the_case_description_to(String newCaseDescription) {
-        expectedCase.setDescription(newCaseDescription);
-        actualResponseEntityCase = caseClient.update( expectedCase);
+        stepContext.expectedCase.setDescription(newCaseDescription);
+        stepContext.actualResponseEntityCase = caseClient.update( stepContext.expectedCase);
     }
 
     @When("I delete the case")
     public void i_delete_the_case() {
-        actualResponseEntityVoid  = caseClient.delete( expectedCase);
+        stepContext.actualResponseEntityVoid  = caseClient.delete( stepContext.expectedCase);
     }
+
+
 
     @Then("the operation was successful")
     public void the_operation_was_successful() {
-        if( actualResponseEntityVoid != null) {
-            Assert.assertTrue(actualResponseEntityVoid.getStatusCode().is2xxSuccessful());
+        if( stepContext.actualResponseEntityVoid != null) {
+            Assert.assertTrue(stepContext.actualResponseEntityVoid.getStatusCode().is2xxSuccessful());
         }
-        if( actualResponseEntityCase != null) {
-            Assert.assertTrue(actualResponseEntityCase.getStatusCode().is2xxSuccessful());
+        if( stepContext.actualResponseEntityCase != null) {
+            Assert.assertTrue(stepContext.actualResponseEntityCase.getStatusCode().is2xxSuccessful());
         }
     }
 
     @Then("the case is in the database")
     public void the_case_is_in_the_database() {
-        Case actualCase = extractCaseFromResponseEntity(actualResponseEntityCase).orElseThrow();
+        Case actualCase = extractCaseFromResponseEntity(stepContext.actualResponseEntityCase).orElseThrow();
         Assert.assertNotNull(actualCase.getId());
-        Assert.assertEquals(expectedCase.getDescription(), actualCase.getDescription());
-        Assert.assertEquals(expectedCase.getCaseStatus().getId(), actualCase.getCaseStatus().getId());
-        Assert.assertEquals(expectedCase.getStartedAt(), actualCase.getStartedAt().withZoneSameInstant(expectedCase.getStartedAt().getZone()));
-        Assert.assertEquals(expectedCase.getType().getId(), actualCase.getType().getId());
+        Assert.assertEquals(stepContext.expectedCase.getDescription(), actualCase.getDescription());
+        Assert.assertEquals(stepContext.expectedCase.getCaseStatus().getId(), actualCase.getCaseStatus().getId());
+        Assert.assertEquals(stepContext.expectedCase.getStartedAt(), actualCase.getStartedAt().withZoneSameInstant(stepContext.expectedCase.getStartedAt().getZone()));
+        Assert.assertEquals(stepContext.expectedCase.getType().getId(), actualCase.getType().getId());
         final Optional<Case> caseInDb = caseRepo.findById(actualCase.getId());
         Assert.assertTrue(caseInDb.isPresent());
 
         caseInDb.ifPresent(aCase -> {
-            Assert.assertEquals(expectedCase.getDescription(), aCase.getDescription());
-            Assert.assertEquals(expectedCase.getCaseStatus().getId(), aCase.getCaseStatus().getId());
-            Assert.assertEquals(expectedCase.getStartedAt(), aCase.getStartedAt().withZoneSameInstant(expectedCase.getStartedAt().getZone()));
-            Assert.assertEquals(expectedCase.getType().getId(), aCase.getType().getId());
+            Assert.assertEquals(stepContext.expectedCase.getDescription(), aCase.getDescription());
+            Assert.assertEquals(stepContext.expectedCase.getCaseStatus().getId(), aCase.getCaseStatus().getId());
+            Assert.assertEquals(stepContext.expectedCase.getStartedAt(), aCase.getStartedAt().withZoneSameInstant(stepContext.expectedCase.getStartedAt().getZone()));
+            Assert.assertEquals(stepContext.expectedCase.getType().getId(), aCase.getType().getId());
         });
 
 
@@ -165,14 +162,14 @@ public class CaseSteps extends CucumberSpringBootContext {
 
     @Then("I get {int} cases")
     public void i_get_cases(Integer numberOfCases) {
-        Assert.assertEquals(numberOfCases.longValue(), actualCases.size());
+        Assert.assertEquals(numberOfCases.longValue(), stepContext.actualCases.size());
     }
 
     @Then("{int} of them are cases of type {string}")
     public void of_them_are_cases_of_type(Integer numberOfCases, String caseType) {
         Assert.assertEquals(
                 numberOfCases.longValue(),
-                actualCases.stream()
+                  stepContext.actualCases.stream()
                         .filter(c ->
                                 c.getType().getDescription().equals(caseType))
                         .toList()
@@ -183,7 +180,7 @@ public class CaseSteps extends CucumberSpringBootContext {
     @Then("{int} of them are cases in status {string}")
     public void of_them_are_cases_in_status(Integer numberOfCases, String status) {
         Assert.assertEquals(numberOfCases.longValue(),
-                actualCases.stream()
+                  stepContext.actualCases.stream()
                         .filter(c -> c.getCaseStatus().getDescription().equals(status))
                         .toList()
                         .size());
@@ -196,7 +193,7 @@ public class CaseSteps extends CucumberSpringBootContext {
 
     @Then("the case is not in the database")
     public void the_case_is_not_in_the_database() {
-        Assert.assertTrue( caseRepo.findById(expectedCase.getId()).isEmpty());
+        Assert.assertTrue( caseRepo.findById(stepContext.expectedCase.getId()).isEmpty());
     }
 
     private Optional<Case> extractCaseFromResponseEntity(ResponseEntity<CaseEntityModel> actualResponseEntityCase) {
