@@ -1,6 +1,7 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -62,4 +63,18 @@ public class PartyRelationship extends AbstractPersistable<UUID> {
     @NotNull
     private PartyRelationshipStatusType status;
 
+
+    @Override
+    public @Nonnull String toString() {
+        return "org.erpmicroservices.peopleandorganizations.api.rest.models.PartyRelationship{" + "comment='" + getComment() + '\'' +
+                ", communicationEvents=" + getCommunicationEvents() +
+                ", fromDate=" + getFromDate() +
+                ", fromPartyRole=" + getFromPartyRole().getType().getDescription() +
+                ", priority=" + getPriority().getDescription() +
+                ", status=" + getStatus().getDescription() +
+                ", thruDate=" + getThruDate() +
+                ", toPartyRole=" + getToPartyRole().getType().getDescription() +
+                ", type=" + getType().getDescription() +
+                '}';
+    }
 }

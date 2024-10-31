@@ -57,6 +57,7 @@ public class Common extends CucumberSpringBootContext {
         stepContext.priorityTypes = new ArrayList<>();
         stepContext.expectedCases = new ArrayList<>();
         stepContext.expectedCase = new Case();
+        stepContext.caseRoleTypes = new ArrayList<>();
     }
 
     @Given("the following types:")
@@ -72,6 +73,12 @@ public class Common extends CucumberSpringBootContext {
                             );
                             stepContext.caseTypes.add(caseType);
                         }
+                        case "case role" -> {
+                            final CaseRoleType caseRoleType = caseRoleTypeRepo.save(CaseRoleType.builder()
+                                    .description(row.get(1))
+                                    .build());
+                            stepContext.caseRoleTypes.add(caseRoleType);
+                        }
                         case "case status" -> {
                             final CaseStatusType caseStatusType = caseStatusTypeRepo.save(CaseStatusType.builder()
                                     .description(row.get(1))
@@ -79,21 +86,15 @@ public class Common extends CucumberSpringBootContext {
                             );
                             stepContext.caseStatusTypes.add(caseStatusType);
                         }
-                        case "party" -> {
-                            stepContext.partyTypes.add(partyTypeRepo.save(PartyType.builder()
-                                    .description(row.get(1))
-                                    .build()));
-                        }
-                        case "communication event" -> {
-                            stepContext.communicationEventTypes.add(communicationEventTypeRepo.save(CommunicationEventType.builder()
-                                    .description(row.get(1))
-                                    .build()));
-                        }
-                        case "communication event role" -> {
-                            stepContext.communicationEventRoleTypes.add(communicationEventRoleTypeRepo.save(CommunicationEventRoleType.builder()
-                                    .description(row.get(1))
-                                    .build()));
-                        }
+                        case "party" -> stepContext.partyTypes.add(partyTypeRepo.save(PartyType.builder()
+                                .description(row.get(1))
+                                .build()));
+                        case "communication event" -> stepContext.communicationEventTypes.add(communicationEventTypeRepo.save(CommunicationEventType.builder()
+                                .description(row.get(1))
+                                .build()));
+                        case "communication event role" -> stepContext.communicationEventRoleTypes.add(communicationEventRoleTypeRepo.save(CommunicationEventRoleType.builder()
+                                .description(row.get(1))
+                                .build()));
                         case "communication event status" -> {
                             stepContext.communicationEventStatusTypes.add(communicationEventStatusTypeRepo.save(CommunicationEventStatusType.builder()
                                     .description(row.get(1))

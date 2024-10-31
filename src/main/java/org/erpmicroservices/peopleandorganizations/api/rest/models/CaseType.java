@@ -1,5 +1,6 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -9,7 +10,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.util.ArrayList;
@@ -19,7 +19,6 @@ import java.util.UUID;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 public class CaseType extends AbstractPersistable<UUID> {
 
     @NotBlank
@@ -49,5 +48,12 @@ public class CaseType extends AbstractPersistable<UUID> {
 
     public boolean isChild() {
         return parent != null;
+    }
+
+
+    @Override
+    public @Nonnull String toString() {
+        return "org.erpmicroservices.peopleandorganizations.api.rest.models.CaseType{" + "description='" + getDescription() + '\'' +
+                '}';
     }
 }

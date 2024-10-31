@@ -7,6 +7,7 @@ import behaviorTests.models.CaseTypeEntityModel;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.Case;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.CaseStatusType;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.CaseType;
+import org.erpmicroservices.peopleandorganizations.api.rest.models.CommunicationEvent;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.*;
@@ -38,6 +39,10 @@ public class CaseClient {
         return template.postForEntity(url, caseEntityModelHttpEntity, CaseEntityModel.class);
     }
 
+    public ResponseEntity<CommunicationEventEntityModel> addCommunicationEventToCase(Case targetCase, CommunicationEvent communicationEvent) {
+        final HttpEntity<String> communicationEventEntityModelHttpEntity = convertCommunicationEventToHttpStringEntity(communicationEvent);
+        return template.postForEntity(url + "/" + targetCase.getId() + "/communicationEvents", communicationEventEntityModelHttpEntity, CommunicationEventEntityModel.class);
+    }
 
     public ResponseEntity<CaseEntityModel> findCaseById(UUID id) {
 
@@ -45,8 +50,8 @@ public class CaseClient {
     }
 
     public ResponseEntity<CaseEntityModel> update(Case expectedCase) {
-         template.put(url + "/" + Objects.requireNonNull(expectedCase.getId()).toString(), convertCaseToHttpStringEntity(expectedCase));
-         return findCaseById(expectedCase.getId());
+        template.put(url + "/" + Objects.requireNonNull(expectedCase.getId()), convertCaseToHttpStringEntity(expectedCase));
+        return findCaseById(expectedCase.getId());
     }
 
     public ResponseEntity<Void> delete(Case caseToDelete) {
@@ -71,6 +76,7 @@ public class CaseClient {
         if (caseStatusCollectionModelResponseEntity.hasBody()) {
             final CaseStatusEntityModel caseStatusEntityModel = caseStatusCollectionModelResponseEntity.getBody();
 
+            assert caseStatusEntityModel != null;
             if (caseStatusEntityModel.getContent() != null) {
                 final CaseStatusType caseStatusType = caseStatusEntityModel.getContent();
                 final UUID idFromEntity = getIdFromEntity(caseStatusEntityModel);
@@ -96,6 +102,7 @@ public class CaseClient {
                         , CaseTypeEntityModel.class);
         if (caseTypeEntityModelResponseEntity.hasBody()) {
             final CaseTypeEntityModel body = caseTypeEntityModelResponseEntity.getBody();
+            assert body != null;
             final CaseType caseType = body.getContent();
             if (caseType != null) {
                 final UUID idFromEntity = getIdFromEntity(body);
@@ -133,5 +140,25 @@ public class CaseClient {
         return new HttpEntity<>(stupidJson, headers);
     }
 
+    private HttpEntity<String> convertCommunicationEventToHttpStringEntity(CommunicationEvent communicationEvent) {
+        String stupidJson = """
+                  {
+                  "contactMechanismType": "http://localhost:8080/contactMechanismTypes/%s",
+                  "note": "%s",
+                  "relationship": "http://localhost:8080/relationships/%s",
+                  "startedAt": "%s",
+                  "statusType": "http://localhost:8080/statusTypes/%s",
+                  "type": "http://localhost:8080/caseTypes/%s"
+                }
+                """.formatted(communicationEvent.getContactMechanismType().getId(),
+                communicationEvent.getNote(),
+                communicationEvent.getRelationship().getId(),
+                communicationEvent.getStarted(),
+                communicationEvent.getStatusType().getId(),
+                communicationEvent.getType().getId());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new HttpEntity<>(stupidJson, headers);
+    }
 
 }

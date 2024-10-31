@@ -1,9 +1,7 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -20,23 +18,30 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class CommunicationEventType extends AbstractPersistable<UUID> {
- @NotBlank
- @NotNull
- private String description;
 
- @ManyToOne
- @JoinColumn(name = "parent_id")
- private CommunicationEventType parent;
+    @NotBlank
+    @NotNull
+    private String description;
 
- @OneToMany(mappedBy = "parent")
- @Builder.Default
- private List<CommunicationEventType> children = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private CommunicationEventType parent;
 
- public boolean isAParent() {
-  return !children.isEmpty();
- }
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<CommunicationEventType> children = new ArrayList<>();
 
- public boolean isChild() {
-  return parent != null;
- }
+    public boolean isAParent() {
+        return !children.isEmpty();
+    }
+
+    public boolean isChild() {
+        return parent != null;
+    }
+
+    @Override
+    public @Nonnull String toString() {
+        return "org.erpmicroservices.peopleandorganizations.api.rest.models.CommunicationEventType{" + "description='" + getDescription() + '\'' +
+                '}';
+    }
 }

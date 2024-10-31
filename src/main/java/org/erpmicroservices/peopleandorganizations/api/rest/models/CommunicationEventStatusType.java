@@ -1,5 +1,6 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -38,5 +39,12 @@ public class CommunicationEventStatusType extends AbstractPersistable<UUID> {
 
     public boolean isChild() {
         return parent != null;
+    }
+
+
+    @Override
+    public @Nonnull String toString() {
+        return "org.erpmicroservices.peopleandorganizations.api.rest.models.CommunicationEventStatusType{" + "description='" + getDescription() + '\'' +
+                '}';
     }
 }

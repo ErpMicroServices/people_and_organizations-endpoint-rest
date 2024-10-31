@@ -1,5 +1,6 @@
 package org.erpmicroservices.peopleandorganizations.api.rest.models;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -20,23 +21,29 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class PartyRelationshipType extends AbstractPersistable<UUID> {
- @NotBlank
- @NotNull
- private String description;
+    @NotBlank
+    @NotNull
+    private String description;
 
- @ManyToOne
- @JoinColumn(name = "parent_id")
- private PartyRelationshipType parent;
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private PartyRelationshipType parent;
 
- @OneToMany(mappedBy = "parent")
- @Builder.Default
- private List<PartyRelationshipType> children = new ArrayList<>();
+    @OneToMany(mappedBy = "parent")
+    @Builder.Default
+    private List<PartyRelationshipType> children = new ArrayList<>();
 
- public boolean isAParent() {
-  return !children.isEmpty();
- }
+    public boolean isAParent() {
+        return !children.isEmpty();
+    }
 
- public boolean isChild() {
-  return parent != null;
- }
+    public boolean isChild() {
+        return parent != null;
+    }
+
+    @Override
+    public @Nonnull String toString() {
+        return "org.erpmicroservices.peopleandorganizations.api.rest.models.PartyRelationshipType{" + "description='" + getDescription() + '\'' +
+                '}';
+    }
 }

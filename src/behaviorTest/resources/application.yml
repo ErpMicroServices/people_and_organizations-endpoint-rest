@@ -25,4 +25,4 @@ logging:
 #          converter:
 #            json: DEBUG
         client:
-          RestTemplate: DEBUG
+          RestTemplate: INFO
