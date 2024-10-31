@@ -148,14 +148,16 @@ public class CaseClient {
                   "relationship": "http://localhost:8080/relationships/%s",
                   "startedAt": "%s",
                   "statusType": "http://localhost:8080/statusTypes/%s",
-                  "type": "http://localhost:8080/caseTypes/%s"
+                  "type": "http://localhost:8080/caseTypes/%s",
+                  "aCase":"http://localhost:8080/cases/%s"
                 }
                 """.formatted(communicationEvent.getContactMechanismType().getId(),
                 communicationEvent.getNote(),
                 communicationEvent.getRelationship().getId(),
                 communicationEvent.getStarted(),
                 communicationEvent.getStatusType().getId(),
-                communicationEvent.getType().getId());
+                communicationEvent.getType().getId(),
+                communicationEvent.getKase().getId());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new HttpEntity<>(stupidJson, headers);

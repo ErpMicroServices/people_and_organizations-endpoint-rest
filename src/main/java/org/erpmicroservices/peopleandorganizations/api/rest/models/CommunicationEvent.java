@@ -47,7 +47,7 @@ public class CommunicationEvent extends AbstractPersistable<UUID> {
 
  @ManyToOne
  @JoinColumn(name = "case_id")
- private Case aCase;
+ private Case kase;
 
  @OneToMany
  @JoinColumn(name = "communication_event_id")

@@ -1,5 +1,6 @@
 package behaviorTests.steps;
 
+import behaviorTests.clients.CommunicationEventEntityModel;
 import behaviorTests.models.CaseEntityModel;
 import io.cucumber.spring.ScenarioScope;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.*;
@@ -34,9 +35,10 @@ public class StepContext {
     public ResponseEntity<CaseEntityModel> actualResponseEntityCase;
     public ResponseEntity<Void> actualResponseEntityVoid;
     public CommunicationEvent expectedCommunicationEvent;
+    public List<CaseRoleType> caseRoleTypes = new ArrayList<>();
+    public ResponseEntity<CommunicationEventEntityModel> actualCommunicationEventResponse;
 
     public StepContext() {
-        caseTypes = new ArrayList<>();
     }
 }
 

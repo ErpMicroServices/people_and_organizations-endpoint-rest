@@ -52,7 +52,7 @@ public class Case extends AbstractPersistable<UUID> {
 
     public void addCommunicationEvent(CommunicationEvent event) {
         this.communicationEvents.add(event);
-        event.setACase(this);
+        event.setKase(this);
     }
 
 

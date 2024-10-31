@@ -2,7 +2,6 @@ package behaviorTests.steps;
 
 import behaviorTests.CucumberSpringBootContext;
 import behaviorTests.clients.CaseClient;
-import behaviorTests.clients.CommunicationEventEntityModel;
 import behaviorTests.models.CaseCollectionEntityModel;
 import behaviorTests.models.CaseEntityModel;
 import io.cucumber.java.en.Given;
@@ -11,6 +10,7 @@ import io.cucumber.java.en.When;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.Case;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.CaseStatusType;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.CaseType;
+import org.erpmicroservices.peopleandorganizations.api.rest.models.CommunicationEvent;
 import org.erpmicroservices.peopleandorganizations.api.rest.repositories.*;
 import org.junit.Assert;
 import org.springframework.http.ResponseEntity;
@@ -131,7 +131,7 @@ public class CaseSteps extends CucumberSpringBootContext {
     @When("I add the communication event to the case")
     public void i_add_the_communication_event_to_the_case() {
         stepContext.expectedCase.addCommunicationEvent(stepContext.expectedCommunicationEvent);
-        ResponseEntity<CommunicationEventEntityModel> actualCommunicationEventResponse = caseClient.addCommunicationEventToCase(stepContext.expectedCase, stepContext.expectedCommunicationEvent);
+        stepContext.actualCommunicationEventResponse = caseClient.addCommunicationEventToCase(stepContext.expectedCase, stepContext.expectedCommunicationEvent);
     }
 
     @Then("the operation was successful")
@@ -218,5 +218,12 @@ public class CaseSteps extends CucumberSpringBootContext {
             return Optional.empty();
         }
         return Optional.empty();
+    }
+
+    @Then("the case contains the communication event")
+    public void the_case_contains_the_communication_event() {
+        final List<CommunicationEvent> byACaseId = communicationEventRepo.findAllByKase_Id(stepContext.expectedCase.getId());
+        Assert.assertFalse( byACaseId.isEmpty());
+        Assert.assertEquals( stepContext.expectedCommunicationEvent.getId(), byACaseId.get(0).getId());
     }
 }

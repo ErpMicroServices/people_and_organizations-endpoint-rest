@@ -2,7 +2,6 @@ package behaviorTests.steps;
 
 import behaviorTests.CucumberSpringBootContext;
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.*;
 import org.erpmicroservices.peopleandorganizations.api.rest.repositories.*;
 import org.springframework.web.client.RestTemplate;
@@ -71,7 +70,7 @@ public class PartySteps extends CucumberSpringBootContext {
                    final CommunicationEventStatusType status = communicationEventStatusTypeRepo.findByDescription( row.get("Status"));
                    final CommunicationEventType type = communicationEventTypeRepo.findByDescription( row.get("Type"));
                    final CommunicationEvent communicationEvent = CommunicationEvent.builder()
-                           .aCase(stepContext.expectedCase)
+                           .kase(stepContext.expectedCase)
                            .contactMechanismType(contactMechanismType)
                            .note(row.get("Note"))
                            .relationship(stepContext.expectedPartyRelationship)
