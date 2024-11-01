@@ -4,10 +4,8 @@ import behaviorTests.models.CaseCollectionEntityModel;
 import behaviorTests.models.CaseEntityModel;
 import behaviorTests.models.CaseStatusEntityModel;
 import behaviorTests.models.CaseTypeEntityModel;
-import org.erpmicroservices.peopleandorganizations.api.rest.models.Case;
-import org.erpmicroservices.peopleandorganizations.api.rest.models.CaseStatusType;
-import org.erpmicroservices.peopleandorganizations.api.rest.models.CaseType;
-import org.erpmicroservices.peopleandorganizations.api.rest.models.CommunicationEvent;
+import behaviorTests.steps.StepContext;
+import org.erpmicroservices.peopleandorganizations.api.rest.models.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.*;
@@ -20,18 +18,20 @@ import java.util.*;
 public class CaseClient {
     protected final RestTemplate template;
     private final Map<String, String> params;
+    private final StepContext stepContext;
     //    @LocalServerPort
     protected int port = 8080;
     private final String baseUrl = "http://localhost:" + port;
     private final String url = baseUrl + "/cases";
 
-    public CaseClient(RestTemplate template) {
+    public CaseClient(RestTemplate template, StepContext stepContext) {
         this.template = template;
         params = new HashMap<>();
         int offset = 0;
         int limit = 10;
         params.put("page", String.valueOf(offset / limit));
         params.put("size", String.valueOf(limit));
+        this.stepContext = stepContext;
     }
 
     public ResponseEntity<CaseEntityModel> save(Case caseToSave) {
@@ -39,9 +39,11 @@ public class CaseClient {
         return template.postForEntity(url, caseEntityModelHttpEntity, CaseEntityModel.class);
     }
 
-    public ResponseEntity<CommunicationEventEntityModel> addCommunicationEventToCase(Case targetCase, CommunicationEvent communicationEvent) {
-        final HttpEntity<String> communicationEventEntityModelHttpEntity = convertCommunicationEventToHttpStringEntity(communicationEvent);
-        return template.postForEntity(url + "/" + targetCase.getId() + "/communicationEvents", communicationEventEntityModelHttpEntity, CommunicationEventEntityModel.class);
+    public void addCommunicationEventToCase(Case targetCase, CommunicationEvent communicationEvent) {
+        stepContext.expectedCommunicationEvents.forEach(event -> {
+            final HttpEntity<String> communicationEventEntityModelHttpEntity = convertCommunicationEventToHttpStringEntity(communicationEvent);
+            template.put(url + "/" + targetCase.getId() + "/communicationEvents", communicationEventEntityModelHttpEntity);
+        });
     }
 
     public ResponseEntity<CaseEntityModel> findCaseById(UUID id) {
@@ -142,22 +144,25 @@ public class CaseClient {
 
     private HttpEntity<String> convertCommunicationEventToHttpStringEntity(CommunicationEvent communicationEvent) {
         String stupidJson = """
-                  {
-                  "contactMechanismType": "http://localhost:8080/contactMechanismTypes/%s",
-                  "note": "%s",
-                  "relationship": "http://localhost:8080/relationships/%s",
-                  "startedAt": "%s",
-                  "statusType": "http://localhost:8080/statusTypes/%s",
-                  "type": "http://localhost:8080/caseTypes/%s",
-                  "aCase":"http://localhost:8080/cases/%s"
+                  http://localhost:8080/communicationEvents/%s
+                """.formatted(communicationEvent.getId());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "text/uri-list");
+        return new HttpEntity<>(stupidJson, headers);
+    }
+
+    private HttpEntity<String> convertCaseRoleToHttpStringEntity(CaseRole caseRole) {
+        String stupidJson = """
+                {
+                    "caseRoleType": "http://localhost:8080/caseRoles/%s",
+                    "fromDate": "%s",
+                    "party": "http://localhost:8080/parties/%s"
                 }
-                """.formatted(communicationEvent.getContactMechanismType().getId(),
-                communicationEvent.getNote(),
-                communicationEvent.getRelationship().getId(),
-                communicationEvent.getStarted(),
-                communicationEvent.getStatusType().getId(),
-                communicationEvent.getType().getId(),
-                communicationEvent.getKase().getId());
+                """.formatted(
+                caseRole.getType().getId(),
+                caseRole.getFromDate(),
+                caseRole.getParty().getId()
+        );
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new HttpEntity<>(stupidJson, headers);

@@ -49,7 +49,12 @@ public class Party extends AbstractPersistable<UUID> {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "party_id")
     @Builder.Default
-    private List<PartyName> identifications = new ArrayList<>();
+    private List<PartyId> identifications = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "party_id")
+    @Builder.Default
+    private List<CaseRole> caseRoles = new ArrayList<>();
 
     public void addRole(PartyRole partyRole) {
         this.roles.add(partyRole);
@@ -59,5 +64,10 @@ public class Party extends AbstractPersistable<UUID> {
     public void removeRole(PartyRole partyRole) {
         this.roles.remove(partyRole);
         partyRole.setOwner(null);
+    }
+
+    public void addCaseRole(CaseRole caseRole) {
+        this.caseRoles.add(caseRole);
+        caseRole.setParty(this);
     }
 }

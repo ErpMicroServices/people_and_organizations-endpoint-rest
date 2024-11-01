@@ -31,10 +31,13 @@ public class Case extends AbstractPersistable<UUID> {
     @JoinColumn(name = "case_status_type_id", nullable = false)
     @NotNull
     private CaseStatusType caseStatus;
+    @OneToMany
+    @JoinColumn(name = "case_id")
+    private List<CommunicationEvent> communicationEvents = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL,
             orphanRemoval = true)
     @JoinColumn(name = "case_id")
-    private List<CommunicationEvent> communicationEvents = new ArrayList<>();
+    private List<CaseRole> roles = new ArrayList<>();
 
     @Builder
     public Case(UUID id, String description, ZonedDateTime startedAt, CaseType type, CaseStatusType caseStatus, List<CommunicationEvent> communicationEvents) {
@@ -55,6 +58,10 @@ public class Case extends AbstractPersistable<UUID> {
         event.setKase(this);
     }
 
+    public void addRole(CaseRole caseRole) {
+        this.roles.add(caseRole);
+        caseRole.setKase(this);
+    }
 
     @Override
     public @Nonnull String toString() {
@@ -64,4 +71,5 @@ public class Case extends AbstractPersistable<UUID> {
                 ", type=" + getType().getDescription() +
                 '}';
     }
+
 }

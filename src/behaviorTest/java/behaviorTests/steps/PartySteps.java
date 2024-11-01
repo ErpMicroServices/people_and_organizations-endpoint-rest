@@ -4,10 +4,10 @@ import behaviorTests.CucumberSpringBootContext;
 import io.cucumber.java.en.Given;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.*;
 import org.erpmicroservices.peopleandorganizations.api.rest.repositories.*;
+import org.junit.Assert;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 
 public class PartySteps extends CucumberSpringBootContext {
 
@@ -17,6 +17,10 @@ public class PartySteps extends CucumberSpringBootContext {
 
     @Given("there are {int} parties with a type of {string} in the database")
     public void there_are_parties_with_a_type_of_in_the_database(Integer numberOfPartiesToCreate, String partyTypeDescription) {
+        createPartiesOfType(numberOfPartiesToCreate, partyTypeDescription);
+    }
+
+    private void createPartiesOfType(Integer numberOfPartiesToCreate, String partyTypeDescription) {
         final PartyType partyType = partyTypeRepo.findByDescription(partyTypeDescription);
         for (int i = 0; i < numberOfPartiesToCreate; i++) {
             final Party party = Party.builder()
@@ -62,26 +66,21 @@ public class PartySteps extends CucumberSpringBootContext {
         stepContext.expectedPartyRelationship = partyRelationshipRepo.save(partyRelationship);
     }
 
-    @Given("communication events:")
-    public void communication_events(io.cucumber.datatable.DataTable dataTable) {
-       dataTable.asMaps()
-               .forEach(row -> {
-                   final ContactMechanismType contactMechanismType = contactMechanismTypeRepo.findByDescription(row.get("Contact Mechanism Type"));
-                   final CommunicationEventStatusType status = communicationEventStatusTypeRepo.findByDescription( row.get("Status"));
-                   final CommunicationEventType type = communicationEventTypeRepo.findByDescription( row.get("Type"));
-                   final CommunicationEvent communicationEvent = CommunicationEvent.builder()
-                           .kase(stepContext.expectedCase)
-                           .contactMechanismType(contactMechanismType)
-                           .note(row.get("Note"))
-                           .relationship(stepContext.expectedPartyRelationship)
-                           .started(ZonedDateTime.parse(row.get("Started At")))
-                           .ended(ZonedDateTime.parse(row.get("Ended At")))
-                           .statusType(status)
-                           .type(type)
-                           .build();
-
-                   stepContext.expectedCommunicationEvent = communicationEventRepo.save(communicationEvent);
-               });
+    @Given("a party with a comment of {string} and a type of {string} is in the database")
+    public void a_party_with_a_comment_of_and_a_type_of_is_in_the_database(String partyComment, String partyTypeDescription) {
+        stepContext.partyTypes.stream()
+                .filter(pt ->
+                        pt.getDescription().equals(partyTypeDescription))
+                .findFirst()
+                .ifPresentOrElse(partyType ->
+                                stepContext.parties.add(
+                                        partyRepo.save(
+                                                Party.builder()
+                                                        .comment(partyComment)
+                                                        .type(partyType)
+                                                        .build())),
+                        () ->
+                                Assert.fail("Party type: " + partyTypeDescription + " was not created."));
     }
 
 }

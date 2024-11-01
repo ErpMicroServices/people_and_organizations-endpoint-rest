@@ -17,7 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.erpmicroservices.peopleandorganizations.builders.DateTimeTestDataBuilder.zonedDateTimeNow;
 
@@ -120,26 +123,29 @@ public class CaseSteps extends CucumberSpringBootContext {
     @When("I update the case description to {string}")
     public void i_update_the_case_description_to(String newCaseDescription) {
         stepContext.expectedCase.setDescription(newCaseDescription);
-        stepContext.actualResponseEntityCase = caseClient.update( stepContext.expectedCase);
+        stepContext.actualResponseEntityCase = caseClient.update(stepContext.expectedCase);
     }
 
     @When("I delete the case")
     public void i_delete_the_case() {
-        stepContext.actualResponseEntityVoid  = caseClient.delete( stepContext.expectedCase);
+        stepContext.actualResponseEntityVoid = caseClient.delete(stepContext.expectedCase);
     }
 
     @When("I add the communication event to the case")
     public void i_add_the_communication_event_to_the_case() {
-        stepContext.expectedCase.addCommunicationEvent(stepContext.expectedCommunicationEvent);
-        stepContext.actualCommunicationEventResponse = caseClient.addCommunicationEventToCase(stepContext.expectedCase, stepContext.expectedCommunicationEvent);
+        stepContext.expectedCommunicationEvents.forEach(event -> {
+            stepContext.expectedCase.addCommunicationEvent(event);
+            caseClient.addCommunicationEventToCase(stepContext.expectedCase, event);
+        });
+
     }
 
     @Then("the operation was successful")
     public void the_operation_was_successful() {
-        if( stepContext.actualResponseEntityVoid != null) {
+        if (stepContext.actualResponseEntityVoid != null) {
             Assert.assertTrue(stepContext.actualResponseEntityVoid.getStatusCode().is2xxSuccessful());
         }
-        if( stepContext.actualResponseEntityCase != null) {
+        if (stepContext.actualResponseEntityCase != null) {
             Assert.assertTrue(stepContext.actualResponseEntityCase.getStatusCode().is2xxSuccessful());
         }
     }
@@ -174,7 +180,7 @@ public class CaseSteps extends CucumberSpringBootContext {
     public void of_them_are_cases_of_type(Integer numberOfCases, String caseType) {
         Assert.assertEquals(
                 numberOfCases.longValue(),
-                  stepContext.actualCases.stream()
+                stepContext.actualCases.stream()
                         .filter(c ->
                                 c.getType().getDescription().equals(caseType))
                         .toList()
@@ -185,7 +191,7 @@ public class CaseSteps extends CucumberSpringBootContext {
     @Then("{int} of them are cases in status {string}")
     public void of_them_are_cases_in_status(Integer numberOfCases, String status) {
         Assert.assertEquals(numberOfCases.longValue(),
-                  stepContext.actualCases.stream()
+                stepContext.actualCases.stream()
                         .filter(c -> c.getCaseStatus().getDescription().equals(status))
                         .toList()
                         .size());
@@ -193,12 +199,38 @@ public class CaseSteps extends CucumberSpringBootContext {
 
     @Then("I get {string} back")
     public void i_get_back(String responseMessage) {
-      Assert.assertTrue(true);
+        Assert.assertTrue(true);
     }
 
     @Then("the case is not in the database")
     public void the_case_is_not_in_the_database() {
-        Assert.assertTrue( caseRepo.findById(Objects.requireNonNull(stepContext.expectedCase.getId())).isEmpty());
+        Assert.assertTrue(caseRepo.findById(Objects.requireNonNull(stepContext.expectedCase.getId())).isEmpty());
+    }
+
+    @Then("the case contains the communication event")
+    public void the_case_contains_the_communication_event() {
+        final List<CommunicationEvent> communicationEventList = communicationEventRepo.findAllByKase_Id(stepContext.expectedCase.getId());
+        Assert.assertFalse(communicationEventList.isEmpty());
+        communicationEventList.forEach(communicationEvent -> Assert.assertTrue(
+                stepContext.expectedCommunicationEvents.stream()
+                        .map(CommunicationEvent::getId)
+                        .toList()
+                        .contains(communicationEvent.getId())));
+
+    }
+
+    @Then("the case has {int} roles")
+    public void the_case_has_roles(long numberOfRoles) {
+        Assert.assertEquals(numberOfRoles, stepContext.actualCaseRoles.getNumber());
+    }
+
+    @Then("the {int} roles have type {string}")
+    public void the_roles_have_type(long roleCount, String caseRoleTypeDescription) {
+        Assert.assertEquals(roleCount,
+                stepContext.actualCaseRoles.get()
+                        .filter(caseRole ->
+                                caseRole.getType().getDescription().equals(caseRoleTypeDescription))
+                        .count());
     }
 
     private Optional<Case> extractCaseFromResponseEntity(ResponseEntity<CaseEntityModel> actualResponseEntityCase) {
@@ -220,10 +252,5 @@ public class CaseSteps extends CucumberSpringBootContext {
         return Optional.empty();
     }
 
-    @Then("the case contains the communication event")
-    public void the_case_contains_the_communication_event() {
-        final List<CommunicationEvent> byACaseId = communicationEventRepo.findAllByKase_Id(stepContext.expectedCase.getId());
-        Assert.assertFalse( byACaseId.isEmpty());
-        Assert.assertEquals( stepContext.expectedCommunicationEvent.getId(), byACaseId.get(0).getId());
-    }
+
 }
