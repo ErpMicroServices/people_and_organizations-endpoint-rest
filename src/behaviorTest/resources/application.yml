@@ -20,9 +20,11 @@ logging:
       springframework:
         data:
           repository: INFO
-        web: DEBUG
-        http: DEBUG
+        web: INFO
+        http: INFO
 #          converter:
 #            json: DEBUG
         client:
           RestTemplate: INFO
+        servlet:
+          resource: INFO

@@ -149,35 +149,35 @@ public class CaseSteps extends CucumberSpringBootContext {
                 .party(stepContext.parties.getFirst())
                 .type(caseRoleTypes.stream().toList().get(0))
                 .build());
-        caseClient.addCaseRole( stepContext.expectedCase, caseRole);
+        caseClient.addCaseRole(stepContext.expectedCase, caseRole);
     }
 
     @Then("the operation was successful")
     public void the_operation_was_successful() {
         if (stepContext.actualResponseEntityVoid != null) {
-            Assert.assertTrue(stepContext.actualResponseEntityVoid.getStatusCode().is2xxSuccessful());
+            Assert.assertTrue("Response was supposed to be 2xx but was" + stepContext.actualResponseEntityVoid.getStatusCode(), stepContext.actualResponseEntityVoid.getStatusCode().is2xxSuccessful());
         }
         if (stepContext.actualResponseEntityCase != null) {
-            Assert.assertTrue(stepContext.actualResponseEntityCase.getStatusCode().is2xxSuccessful());
+            Assert.assertTrue("Response was supposed to be 2xx but was" + stepContext.actualResponseEntityCase.getStatusCode(), stepContext.actualResponseEntityCase.getStatusCode().is2xxSuccessful());
         }
     }
 
     @Then("the case is in the database")
     public void the_case_is_in_the_database() {
         Case actualCase = extractCaseFromResponseEntity(stepContext.actualResponseEntityCase).orElseThrow();
-        Assert.assertNotNull(actualCase.getId());
-        Assert.assertEquals(stepContext.expectedCase.getDescription(), actualCase.getDescription());
-        Assert.assertEquals(stepContext.expectedCase.getCaseStatus().getId(), actualCase.getCaseStatus().getId());
-        Assert.assertEquals(stepContext.expectedCase.getStartedAt(), actualCase.getStartedAt().withZoneSameInstant(stepContext.expectedCase.getStartedAt().getZone()));
-        Assert.assertEquals(stepContext.expectedCase.getType().getId(), actualCase.getType().getId());
+        Assert.assertNotNull("Case a null id", actualCase.getId());
+        Assert.assertEquals("Case descriptions do not match", stepContext.expectedCase.getDescription(), actualCase.getDescription());
+        Assert.assertEquals("Case statuses are not the same", stepContext.expectedCase.getCaseStatus().getId(), actualCase.getCaseStatus().getId());
+        Assert.assertEquals("Case started at timestamps are not the same", stepContext.expectedCase.getStartedAt(), actualCase.getStartedAt().withZoneSameInstant(stepContext.expectedCase.getStartedAt().getZone()));
+        Assert.assertEquals("Case types are not the same", stepContext.expectedCase.getType().getId(), actualCase.getType().getId());
         final Optional<Case> caseInDb = caseRepo.findById(actualCase.getId());
-        Assert.assertTrue(caseInDb.isPresent());
+        Assert.assertTrue("Case is not in database", caseInDb.isPresent());
 
         caseInDb.ifPresent(aCase -> {
-            Assert.assertEquals(stepContext.expectedCase.getDescription(), aCase.getDescription());
-            Assert.assertEquals(stepContext.expectedCase.getCaseStatus().getId(), aCase.getCaseStatus().getId());
-            Assert.assertEquals(stepContext.expectedCase.getStartedAt(), aCase.getStartedAt().withZoneSameInstant(stepContext.expectedCase.getStartedAt().getZone()));
-            Assert.assertEquals(stepContext.expectedCase.getType().getId(), aCase.getType().getId());
+            Assert.assertEquals("Case in database description is not correct", stepContext.expectedCase.getDescription(), aCase.getDescription());
+            Assert.assertEquals("Case in database status is not correct", stepContext.expectedCase.getCaseStatus().getId(), aCase.getCaseStatus().getId());
+            Assert.assertEquals("Case in database started at is not correct", stepContext.expectedCase.getStartedAt(), aCase.getStartedAt().withZoneSameInstant(stepContext.expectedCase.getStartedAt().getZone()));
+            Assert.assertEquals("Case in database type is not correct", stepContext.expectedCase.getType().getId(), aCase.getType().getId());
         });
 
 
@@ -185,12 +185,13 @@ public class CaseSteps extends CucumberSpringBootContext {
 
     @Then("I get {int} cases")
     public void i_get_cases(Integer numberOfCases) {
-        Assert.assertEquals(numberOfCases.longValue(), stepContext.actualCases.size());
+        Assert.assertEquals("The numner of expected cases is not correct", numberOfCases.longValue(), stepContext.actualCases.size());
     }
 
     @Then("{int} of them are cases of type {string}")
     public void of_them_are_cases_of_type(Integer numberOfCases, String caseType) {
         Assert.assertEquals(
+                "The number of cases of type " + caseType + " is not correct",
                 numberOfCases.longValue(),
                 stepContext.actualCases.stream()
                         .filter(c ->
@@ -202,7 +203,8 @@ public class CaseSteps extends CucumberSpringBootContext {
 
     @Then("{int} of them are cases in status {string}")
     public void of_them_are_cases_in_status(Integer numberOfCases, String status) {
-        Assert.assertEquals(numberOfCases.longValue(),
+        Assert.assertEquals("The number of cases in status" + status + " is not correct",
+                numberOfCases.longValue(),
                 stepContext.actualCases.stream()
                         .filter(c -> c.getCaseStatus().getDescription().equals(status))
                         .toList()
@@ -216,13 +218,14 @@ public class CaseSteps extends CucumberSpringBootContext {
 
     @Then("the case is not in the database")
     public void the_case_is_not_in_the_database() {
-        Assert.assertTrue(caseRepo.findById(Objects.requireNonNull(stepContext.expectedCase.getId())).isEmpty());
+        Assert.assertTrue("The case is in the database", caseRepo.findById(Objects.requireNonNull(stepContext.expectedCase.getId())).isEmpty());
     }
 
     @Then("the case contains the communication event")
     public void the_case_contains_the_communication_event() {
         final List<CommunicationEvent> communicationEventList = communicationEventRepo.findAllByKase_Id(stepContext.expectedCase.getId());
-        Assert.assertFalse(communicationEventList.isEmpty());
+        Assert.assertFalse("The list of communicationn events in the database is empty",
+                communicationEventList.isEmpty());
         communicationEventList.forEach(communicationEvent -> Assert.assertTrue(
                 stepContext.expectedCommunicationEvents.stream()
                         .map(CommunicationEvent::getId)
@@ -233,12 +236,13 @@ public class CaseSteps extends CucumberSpringBootContext {
 
     @Then("the case has {int} roles")
     public void the_case_has_roles(long numberOfRoles) {
-        Assert.assertEquals(numberOfRoles, stepContext.actualCaseRoles.getNumber());
+        Assert.assertEquals("The case does not have the right amount of roles",numberOfRoles, stepContext.actualCaseRoles.getNumber());
     }
 
     @Then("the {int} roles have type {string}")
     public void the_roles_have_type(long roleCount, String caseRoleTypeDescription) {
-        Assert.assertEquals(roleCount,
+        Assert.assertEquals("There are not enough roles for case with type of " +caseRoleTypeDescription,
+                roleCount,
                 stepContext.actualCaseRoles.get()
                         .filter(caseRole ->
                                 caseRole.getType().getDescription().equals(caseRoleTypeDescription))

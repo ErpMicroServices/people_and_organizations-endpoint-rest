@@ -14,15 +14,12 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.fail;
 
 public class CommonSteps extends CucumberSpringBootContext {
 
-
-    public static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(
-            DockerImageName.parse("erpmicroservices/people_and_organizations-database:latest")
-                    .asCompatibleSubstituteFor("postgres"));
 
     public CommonSteps(StepContext stepContext, RestTemplate template, CaseTypeRepo caseTypeRepo, CaseStatusTypeRepo caseStatusTypeRepo, PartyContactMechanismRepo partyContactMechanismRepo, ContactMechanismRepo contactMechanismRepo, ContactMechanismGeographicBoundaryRepo contactMechanismGeographicBoundaryRepo, CommunicationEventPurposeTypeRepo communicationEventPurposeTypeRepo, CaseRepo caseRepo, PartyTypeRepo partyTypeRepo, PartyRelationshipStatusTypeRepo partyRelationshipStatusTypeRepo, FacilityRoleRepo facilityRoleRepo, PartyRepo partyRepo, CaseRoleTypeRepo caseRoleTypeRepo, PartyRelationshipTypeRepo partyRelationshipTypeRepo, CommunicationEventRepo communicationEventRepo, FacilityRoleTypeRepo facilityRoleTypeRepo, GeographicBoundaryRepo geographicBoundaryRepo, CommunicationEventTypeRepo communicationEventTypeRepo, CaseRoleRepo caseRoleRepo, PartyContactMechanismPurposeRepo partyContactMechanismPurposeRepo, ContactMechanismTypeRepo contactMechanismTypeRepo, FacilityContactMechanismRepo facilityContactMechanismRepo, PartyRoleTypeRepo partyRoleTypeRepo, PartyRoleRepo partyRoleRepo, FacilityTypeRepo facilityTypeRepo, GeographicBoundaryTypeRepo geographicBoundaryTypeRepo, CommunicationEventStatusTypeRepo communicationEventStatusTypeRepo, PartyRelationshipRepo partyRelationshipRepo, PartyContactMechanismPurposeTypeRepo partyContactMechanismPurposeTypeRepo, CommunicationEventRoleTypeRepo communicationEventRoleTypeRepo, PriorityTypeRepo priorityTypeRepo, FacilityRepo facilityRepo) {
         super(stepContext, template, caseStatusTypeRepo, caseTypeRepo, caseRepo, partyTypeRepo, partyRepo, caseRoleTypeRepo, caseRoleRepo, contactMechanismTypeRepo, partyRoleTypeRepo, partyRoleRepo, communicationEventStatusTypeRepo, communicationEventTypeRepo, partyRelationshipTypeRepo, partyRelationshipStatusTypeRepo, priorityTypeRepo, partyRelationshipRepo, communicationEventRepo, facilityRepo, facilityTypeRepo, facilityRoleTypeRepo, facilityRoleRepo, facilityContactMechanismRepo, contactMechanismRepo, geographicBoundaryRepo, geographicBoundaryTypeRepo, contactMechanismGeographicBoundaryRepo, partyContactMechanismRepo, partyContactMechanismPurposeRepo, partyContactMechanismPurposeTypeRepo, communicationEventPurposeTypeRepo, communicationEventRoleTypeRepo);
@@ -30,12 +27,12 @@ public class CommonSteps extends CucumberSpringBootContext {
 
     @BeforeAll
     public static void setupWorld() {
-//        postgreSQLContainer.start();
+        postgreSQLContainer.start();
     }
 
     @AfterAll
     public static void tearDownWorld() {
-//        postgreSQLContainer.stop();
+        postgreSQLContainer.stop();
     }
 
 

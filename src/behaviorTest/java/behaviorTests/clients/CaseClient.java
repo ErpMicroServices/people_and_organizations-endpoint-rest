@@ -7,25 +7,27 @@ import behaviorTests.models.CaseTypeEntityModel;
 import behaviorTests.steps.StepContext;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.*;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
 import java.util.*;
-
+@Lazy
 @Component
 public class CaseClient {
-    protected final RestTemplate template;
+    protected final TestRestTemplate template;
     private final Map<String, String> params;
     private final StepContext stepContext;
-    //    @LocalServerPort
-    protected int port = 8080;
-    private final String baseUrl = "http://localhost:" + port;
-    private final String url = baseUrl + "/cases";
+    @LocalServerPort
+    private int port;
 
-    public CaseClient(RestTemplate template, StepContext stepContext) {
-        this.template = template;
+    public CaseClient( TestRestTemplate testRestTemplate, StepContext stepContext) {
+        this.template = testRestTemplate;
         params = new HashMap<>();
         int offset = 0;
         int limit = 10;
@@ -34,41 +36,45 @@ public class CaseClient {
         this.stepContext = stepContext;
     }
 
+    private String url() {
+        return "http://localhost:" + port + "/cases";
+    }
+
     public ResponseEntity<CaseEntityModel> save(Case caseToSave) {
         final HttpEntity<String> caseEntityModelHttpEntity = convertCaseToHttpStringEntity(caseToSave);
-        return template.postForEntity(url, caseEntityModelHttpEntity, CaseEntityModel.class);
+        return template.postForEntity(url(), caseEntityModelHttpEntity, CaseEntityModel.class);
     }
 
     public void addCommunicationEventToCase(Case targetCase, CommunicationEvent communicationEvent) {
         stepContext.expectedCommunicationEvents.forEach(event -> {
             final HttpEntity<String> communicationEventEntityModelHttpEntity = convertCommunicationEventToHttpStringEntity(communicationEvent);
-            template.put(url + "/" + targetCase.getId() + "/communicationEvents", communicationEventEntityModelHttpEntity);
+            template.put(url() + "/" + targetCase.getId() + "/communicationEvents", communicationEventEntityModelHttpEntity);
         });
     }
 
     public void addCaseRole(Case targetCase, CaseRole caseRole) {
         final HttpEntity<String> caseRoleToHttpStringEntity = convertCaseRoleToHttpStringEntity(caseRole);
-        template.put(url + "/" + targetCase.getId() + "/caseRoles", caseRoleToHttpStringEntity);
+        template.put(url() + "/" + targetCase.getId() + "/caseRoles", caseRoleToHttpStringEntity);
     }
 
     public ResponseEntity<CaseEntityModel> findCaseById(UUID id) {
 
-        return template.getForEntity(url + "/" + id.toString(), CaseEntityModel.class, params);
+        return template.getForEntity(url() + "/" + id.toString(), CaseEntityModel.class, params);
     }
 
     public ResponseEntity<CaseEntityModel> update(Case expectedCase) {
-        template.put(url + "/" + Objects.requireNonNull(expectedCase.getId()), convertCaseToHttpStringEntity(expectedCase));
+        template.put(url() + "/" + Objects.requireNonNull(expectedCase.getId()), convertCaseToHttpStringEntity(expectedCase));
         return findCaseById(expectedCase.getId());
     }
 
     public ResponseEntity<Void> delete(Case caseToDelete) {
-        return template.exchange(url + "/" + caseToDelete.getId(), HttpMethod.DELETE, null, Void.class);
+        return template.exchange(url() + "/" + caseToDelete.getId(), HttpMethod.DELETE, null, Void.class);
 
     }
 
     public @NotNull ResponseEntity<CaseCollectionEntityModel> getCaseCollectionEntityModelResponseEntity() {
         return template
-                .getForEntity(url, CaseCollectionEntityModel.class, params);
+                .getForEntity("/cases", CaseCollectionEntityModel.class, params);
     }
 
     public Optional<CaseStatusType> getCaseStatusTypeFromEntity(EntityModel<Case> aCaseEntity) {

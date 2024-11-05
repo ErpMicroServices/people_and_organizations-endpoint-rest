@@ -5,15 +5,29 @@ import io.cucumber.spring.CucumberContextConfiguration;
 import org.erpmicroservices.peopleandorganizations.api.rest.PeopleAndOrganizationsApiRestApplication;
 import org.erpmicroservices.peopleandorganizations.api.rest.repositories.*;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.ArrayList;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 @CucumberContextConfiguration
 @ContextConfiguration(classes = PeopleAndOrganizationsApiRestApplication.class)
-@SpringBootTest(classes = TestRestTemplateConfig.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(classes = TestRestTemplateConfig.class,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Testcontainers
 public class CucumberSpringBootContext {
+
+    @Container
+    @ServiceConnection
+    protected static final PostgreSQLContainer<?> postgreSQLContainer =
+            new PostgreSQLContainer<>(
+                    DockerImageName.parse("erpmicroservices/people_and_organizations-database:latest")
+                            .asCompatibleSubstituteFor("postgres"));
+
     protected final CaseStatusTypeRepo caseStatusTypeRepo;
     protected final CaseTypeRepo caseTypeRepo;
     protected final CaseRepo caseRepo;
