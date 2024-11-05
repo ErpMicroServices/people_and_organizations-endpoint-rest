@@ -46,6 +46,11 @@ public class CaseClient {
         });
     }
 
+    public void addCaseRole(Case targetCase, CaseRole caseRole) {
+        final HttpEntity<String> caseRoleToHttpStringEntity = convertCaseRoleToHttpStringEntity(caseRole);
+        template.put(url + "/" + targetCase.getId() + "/caseRoles", caseRoleToHttpStringEntity);
+    }
+
     public ResponseEntity<CaseEntityModel> findCaseById(UUID id) {
 
         return template.getForEntity(url + "/" + id.toString(), CaseEntityModel.class, params);
@@ -153,19 +158,11 @@ public class CaseClient {
 
     private HttpEntity<String> convertCaseRoleToHttpStringEntity(CaseRole caseRole) {
         String stupidJson = """
-                {
-                    "caseRoleType": "http://localhost:8080/caseRoles/%s",
-                    "fromDate": "%s",
-                    "party": "http://localhost:8080/parties/%s"
-                }
+                http://localhost:8080/caseRoles/%s
                 """.formatted(
-                caseRole.getType().getId(),
-                caseRole.getFromDate(),
-                caseRole.getParty().getId()
-        );
+                caseRole.getId());
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Content-Type", "text/uri-list");
         return new HttpEntity<>(stupidJson, headers);
     }
-
 }

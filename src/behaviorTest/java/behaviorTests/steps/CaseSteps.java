@@ -7,15 +7,15 @@ import behaviorTests.models.CaseEntityModel;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.erpmicroservices.peopleandorganizations.api.rest.models.Case;
-import org.erpmicroservices.peopleandorganizations.api.rest.models.CaseStatusType;
-import org.erpmicroservices.peopleandorganizations.api.rest.models.CaseType;
-import org.erpmicroservices.peopleandorganizations.api.rest.models.CommunicationEvent;
+import org.erpmicroservices.peopleandorganizations.api.rest.models.*;
 import org.erpmicroservices.peopleandorganizations.api.rest.repositories.*;
 import org.junit.Assert;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -138,6 +138,18 @@ public class CaseSteps extends CucumberSpringBootContext {
             caseClient.addCommunicationEventToCase(stepContext.expectedCase, event);
         });
 
+    }
+
+    @When("I add a party with case role {string} to the case")
+    public void i_add_a_party_with_case_role_to_the_case(String caseRoleDescription) {
+        final Page<CaseRoleType> caseRoleTypes = caseRoleTypeRepo.findByDescriptionContaining(caseRoleDescription, Pageable.unpaged());
+
+        CaseRole caseRole = caseRoleRepo.save(CaseRole.builder()
+                .fromDate(LocalDate.now())
+                .party(stepContext.parties.getFirst())
+                .type(caseRoleTypes.stream().toList().get(0))
+                .build());
+        caseClient.addCaseRole( stepContext.expectedCase, caseRole);
     }
 
     @Then("the operation was successful")
