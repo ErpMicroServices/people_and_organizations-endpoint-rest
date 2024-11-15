@@ -185,7 +185,7 @@ public class CaseSteps extends CucumberSpringBootContext {
 
     @Then("I get {int} cases")
     public void i_get_cases(Integer numberOfCases) {
-        Assert.assertEquals("The numner of expected cases is not correct", numberOfCases.longValue(), stepContext.actualCases.size());
+        Assert.assertEquals("The number of expected cases is not correct", numberOfCases.longValue(), stepContext.actualCases.size());
     }
 
     @Then("{int} of them are cases of type {string}")
