@@ -7,7 +7,6 @@ import behaviorTests.models.CaseTypeEntityModel;
 import behaviorTests.steps.StepContext;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.*;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.hateoas.EntityModel;
@@ -20,14 +19,14 @@ import java.util.*;
 @Lazy
 @Component
 public class CaseClient {
-    protected final TestRestTemplate template;
+    protected final RestTemplate template;
     private final Map<String, String> params;
     private final StepContext stepContext;
-    @LocalServerPort
-    private int port;
+//    @LocalServerPort
+    private int port=8080;
 
-    public CaseClient( TestRestTemplate testRestTemplate, StepContext stepContext) {
-        this.template = testRestTemplate;
+    public CaseClient( RestTemplate RestTemplate, StepContext stepContext) {
+        this.template = RestTemplate;
         params = new HashMap<>();
         int offset = 0;
         int limit = 10;
@@ -74,7 +73,7 @@ public class CaseClient {
 
     public @NotNull ResponseEntity<CaseCollectionEntityModel> getCaseCollectionEntityModelResponseEntity() {
         return template
-                .getForEntity("/cases", CaseCollectionEntityModel.class, params);
+                .getForEntity(url(), CaseCollectionEntityModel.class, params);
     }
 
     public Optional<CaseStatusType> getCaseStatusTypeFromEntity(EntityModel<Case> aCaseEntity) {

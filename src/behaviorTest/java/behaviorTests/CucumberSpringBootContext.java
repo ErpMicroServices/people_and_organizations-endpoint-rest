@@ -17,16 +17,18 @@ import org.testcontainers.utility.DockerImageName;
 @CucumberContextConfiguration
 @ContextConfiguration(classes = PeopleAndOrganizationsApiRestApplication.class)
 @SpringBootTest(classes = TestRestTemplateConfig.class,
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Testcontainers
+        webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = {
+        "spring.profiles.active=development"
+})
+//@Testcontainers
 public class CucumberSpringBootContext {
 
-    @Container
-    @ServiceConnection
-    protected static final PostgreSQLContainer<?> postgreSQLContainer =
-            new PostgreSQLContainer<>(
-                    DockerImageName.parse("erpmicroservices/people_and_organizations-database:latest")
-                            .asCompatibleSubstituteFor("postgres"));
+//    @Container
+//    @ServiceConnection
+//    protected static final PostgreSQLContainer<?> postgreSQLContainer =
+//            new PostgreSQLContainer<>(
+//                    DockerImageName.parse("erpmicroservices/people_and_organizations-database:latest")
+//                            .asCompatibleSubstituteFor("postgres"));
 
     protected final CaseStatusTypeRepo caseStatusTypeRepo;
     protected final CaseTypeRepo caseTypeRepo;

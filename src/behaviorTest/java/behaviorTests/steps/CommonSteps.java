@@ -27,12 +27,12 @@ public class CommonSteps extends CucumberSpringBootContext {
 
     @BeforeAll
     public static void setupWorld() {
-        postgreSQLContainer.start();
+//        postgreSQLContainer.start();
     }
 
     @AfterAll
     public static void tearDownWorld() {
-        postgreSQLContainer.stop();
+//        postgreSQLContainer.stop();
     }
 
 

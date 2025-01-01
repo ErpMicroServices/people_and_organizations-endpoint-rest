@@ -12,6 +12,7 @@ import org.erpmicroservices.peopleandorganizations.api.rest.repositories.*;
 import org.junit.Assert;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -85,6 +86,7 @@ public class CaseSteps extends CucumberSpringBootContext {
     public void i_search_for_all_cases() {
 
         final ResponseEntity<CaseCollectionEntityModel> caseCollectionModelResponseEntity = caseClient.getCaseCollectionEntityModelResponseEntity();
+        Assert.assertEquals("Did not get 200 response.  " + caseCollectionModelResponseEntity.getStatusCode(), HttpStatusCode.valueOf(200), caseCollectionModelResponseEntity.getStatusCode());
         stepContext.actualCases = Optional.ofNullable(caseCollectionModelResponseEntity.getBody())
                 .map(entity -> entity.getContent().stream()
                         .map(aCaseEntity -> {
@@ -236,12 +238,12 @@ public class CaseSteps extends CucumberSpringBootContext {
 
     @Then("the case has {int} roles")
     public void the_case_has_roles(long numberOfRoles) {
-        Assert.assertEquals("The case does not have the right amount of roles",numberOfRoles, stepContext.actualCaseRoles.getNumber());
+        Assert.assertEquals("The case does not have the right amount of roles", numberOfRoles, stepContext.actualCaseRoles.getNumber());
     }
 
     @Then("the {int} roles have type {string}")
     public void the_roles_have_type(long roleCount, String caseRoleTypeDescription) {
-        Assert.assertEquals("There are not enough roles for case with type of " +caseRoleTypeDescription,
+        Assert.assertEquals("There are not enough roles for case with type of " + caseRoleTypeDescription,
                 roleCount,
                 stepContext.actualCaseRoles.get()
                         .filter(caseRole ->
