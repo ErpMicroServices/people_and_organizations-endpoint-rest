@@ -12,17 +12,9 @@ import org.springframework.web.client.RestTemplate;
 @ContextConfiguration(classes = PeopleAndOrganizationsApiRestApplication.class)
 @SpringBootTest(classes = TestRestTemplateConfig.class,
         webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = {
-        "spring.profiles.active=development"
+        "spring.profiles.active=integration_test"
 })
-//@Testcontainers
 public class CucumberSpringBootContext {
-
-//    @Container
-//    @ServiceConnection
-//    protected static final PostgreSQLContainer<?> postgreSQLContainer =
-//            new PostgreSQLContainer<>(
-//                    DockerImageName.parse("erpmicroservices/people_and_organizations-database:latest")
-//                            .asCompatibleSubstituteFor("postgres"));
 
     protected final CaseStatusTypeRepo caseStatusTypeRepo;
     protected final CaseTypeRepo caseTypeRepo;

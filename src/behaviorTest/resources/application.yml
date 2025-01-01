@@ -16,7 +16,7 @@ management:
 spring:
   config:
     activate:
-      on-profile: development
+      on-profile: integration_test
   jpa:
     show-sql: false
     hibernate:

@@ -5,7 +5,7 @@ import java.time.ZonedDateTime;
 
 public class DateTimeTestDataBuilder {
 
-	public static final ZonedDateTime zonedDateTimeNow() {
+	public static ZonedDateTime zonedDateTimeNow() {
 		return ZonedDateTime.now().withZoneSameInstant(ZoneOffset.UTC).withNano(0);
 	}
 }

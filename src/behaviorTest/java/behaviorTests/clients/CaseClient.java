@@ -20,8 +20,6 @@ public class CaseClient {
     protected final RestTemplate template;
     private final Map<String, String> params;
     private final StepContext stepContext;
-//    @LocalServerPort
-    private int port=8080;
 
     public CaseClient( RestTemplate RestTemplate, StepContext stepContext) {
         this.template = RestTemplate;
@@ -34,6 +32,7 @@ public class CaseClient {
     }
 
     private String url() {
+        int port = 8080;
         return "http://localhost:" + port + "/cases";
     }
 
