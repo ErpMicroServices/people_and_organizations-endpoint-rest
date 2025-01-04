@@ -36,9 +36,3 @@ logging:
 
 ---
 
-spring:
-  config:
-    activate:
-      on-profile: docker
-
-
