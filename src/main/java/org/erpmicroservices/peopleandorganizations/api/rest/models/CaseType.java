@@ -35,7 +35,7 @@ public class CaseType extends AbstractPersistable<UUID> {
         setId(id);
         this.description = description;
         this.parent = parent;
-        this.children = children;
+        this.children = children == null ? new ArrayList<>() : children;
     }
 
     public CaseType() {
