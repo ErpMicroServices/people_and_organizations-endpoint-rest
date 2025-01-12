@@ -14,11 +14,20 @@ import java.util.UUID;
 
 @Entity(name = "case_role")
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class CaseRole extends AbstractPersistable<UUID> {
+
+ @Builder
+ public CaseRole(UUID id, LocalDate fromDate, LocalDate thruDate, Case kase, CaseRoleType type, Party party) {
+  this.fromDate = fromDate;
+  this.thruDate = thruDate;
+  this.kase = kase;
+  this.type = type;
+  this.party = party;
+  setId(id);
+ }
 
  @Column(name = "from_date", columnDefinition = "DATE")
  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

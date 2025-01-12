@@ -4,6 +4,7 @@ import behaviorTests.CucumberSpringBootContext;
 import behaviorTests.clients.CaseClient;
 import behaviorTests.models.CaseCollectionEntityModel;
 import behaviorTests.models.CaseEntityModel;
+import io.cucumber.java.PendingException;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -146,12 +147,13 @@ public class CaseSteps extends CucumberSpringBootContext {
     public void i_add_a_party_with_case_role_to_the_case(String caseRoleDescription) {
         final Page<CaseRoleType> caseRoleTypes = caseRoleTypeRepo.findByDescriptionContaining(caseRoleDescription, Pageable.unpaged());
 
-        CaseRole caseRole = caseRoleRepo.save(CaseRole.builder()
+        CaseRole caseRole = CaseRole.builder()
                 .fromDate(LocalDate.now())
                 .party(stepContext.parties.getFirst())
                 .type(caseRoleTypes.stream().toList().get(0))
-                .build());
-        caseClient.addCaseRole(stepContext.expectedCase, caseRole);
+                .build();
+        stepContext.expectedCase.addRole(caseRole);
+        caseClient.addCaseRoleToCase(stepContext.expectedCase, caseRole);
     }
 
     @Then("the operation was successful")
@@ -215,7 +217,8 @@ public class CaseSteps extends CucumberSpringBootContext {
 
     @Then("I get {string} back")
     public void i_get_back(String responseMessage) {
-        Assert.assertTrue(true);
+        throw new io.cucumber.java.PendingException();
+//        Assert.assertTrue(true);
     }
 
     @Then("the case is not in the database")
@@ -238,17 +241,31 @@ public class CaseSteps extends CucumberSpringBootContext {
 
     @Then("the case has {int} roles")
     public void the_case_has_roles(long numberOfRoles) {
-        Assert.assertEquals("The case does not have the right amount of roles", numberOfRoles, stepContext.actualCaseRoles.getNumber());
+        Assert.assertEquals("The case does not have the right amount of roles", numberOfRoles, actualNumberOfCaseRolesInExpectedCase());
     }
 
     @Then("the {int} roles have type {string}")
     public void the_roles_have_type(long roleCount, String caseRoleTypeDescription) {
         Assert.assertEquals("There are not enough roles for case with type of " + caseRoleTypeDescription,
-                roleCount,
-                stepContext.actualCaseRoles.get()
-                        .filter(caseRole ->
-                                caseRole.getType().getDescription().equals(caseRoleTypeDescription))
-                        .count());
+                roleCount
+                , actualNumberOfCaseRolesOfTypeInExpectedCase(caseRoleTypeDescription)
+        );
+    }
+
+    public long actualNumberOfCaseRolesOfTypeInExpectedCase(String caseRoleTypeDescription) {
+        return caseRoleRepo.findAllByKase_Id(
+                        stepContext.expectedCase.getId()
+                        , Pageable.unpaged())
+                .stream()
+                .filter(caseRole -> caseRoleTypeDescription.equals(caseRole.getType().getDescription()))
+                .count();
+    }
+
+    public long actualNumberOfCaseRolesInExpectedCase() {
+        return caseRoleRepo.findAllByKase_Id(
+                        stepContext.expectedCase.getId()
+                        , Pageable.unpaged())
+                .getNumberOfElements();
     }
 
     private Optional<Case> extractCaseFromResponseEntity(ResponseEntity<CaseEntityModel> actualResponseEntityCase) {
