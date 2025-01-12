@@ -215,12 +215,6 @@ public class CaseSteps extends CucumberSpringBootContext {
                         .size());
     }
 
-    @Then("I get {string} back")
-    public void i_get_back(String responseMessage) {
-        throw new io.cucumber.java.PendingException();
-//        Assert.assertTrue(true);
-    }
-
     @Then("the case is not in the database")
     public void the_case_is_not_in_the_database() {
         Assert.assertTrue("The case is in the database", caseRepo.findById(Objects.requireNonNull(stepContext.expectedCase.getId())).isEmpty());
