@@ -75,6 +75,7 @@ public class CaseSteps extends CucumberSpringBootContext {
         stepContext.expectedCase.setCaseStatus(stepContext.caseStatusTypes.getFirst());
         stepContext.expectedCase.setType(stepContext.caseTypes.getFirst());
         stepContext.expectedCase = caseRepo.save(stepContext.expectedCase);
+        stepContext.actualResponseEntityCase = null;
     }
 
     @Given("a party with case role {string} has been added to the case")
@@ -177,9 +178,17 @@ public class CaseSteps extends CucumberSpringBootContext {
         final CaseRole caseRole = stepContext.expectedCase.getRoles().stream()
                 .findFirst()
                 .orElseThrow();
-        stepContext.expectedCaseRoleFromDate = LocalDate.of(2025,01,01);
-        caseRole.setFromDate( stepContext.expectedCaseRoleFromDate);
+        stepContext.expectedCaseRoleFromDate = LocalDate.of(2025, 01, 01);
+        caseRole.setFromDate(stepContext.expectedCaseRoleFromDate);
         stepContext.actualCaseRole = caseClient.updateCaseRole(caseRole);
+    }
+
+    @When("I delete the case role")
+    public void i_delete_the_case_role() {
+        final CaseRole caseRole = stepContext.expectedCase.getRoles().stream()
+                .findFirst()
+                .orElseThrow();
+        caseClient.deleteCaseRole(caseRole);
     }
 
     @Then("the operation was successful")
@@ -194,13 +203,14 @@ public class CaseSteps extends CucumberSpringBootContext {
 
     @Then("the case is in the database")
     public void the_case_is_in_the_database() {
-        Case actualCase = extractCaseFromResponseEntity(stepContext.actualResponseEntityCase).orElseThrow();
-        Assert.assertNotNull("Case a null id", actualCase.getId());
-        Assert.assertEquals("Case descriptions do not match", stepContext.expectedCase.getDescription(), actualCase.getDescription());
-        Assert.assertEquals("Case statuses are not the same", stepContext.expectedCase.getCaseStatus().getId(), actualCase.getCaseStatus().getId());
-        Assert.assertEquals("Case started at timestamps are not the same", stepContext.expectedCase.getStartedAt(), actualCase.getStartedAt().withZoneSameInstant(stepContext.expectedCase.getStartedAt().getZone()));
-        Assert.assertEquals("Case types are not the same", stepContext.expectedCase.getType().getId(), actualCase.getType().getId());
-        final Optional<Case> caseInDb = caseRepo.findById(actualCase.getId());
+        UUID idFromEntity;
+        if (stepContext.actualResponseEntityCase == null || stepContext.actualResponseEntityCase.getBody() == null) {
+            idFromEntity = stepContext.expectedCase.getId();
+        } else {
+            idFromEntity = caseClient.getIdFromEntity(stepContext.actualResponseEntityCase.getBody());
+        }
+
+        final Optional<Case> caseInDb = caseRepo.findById(idFromEntity);
         Assert.assertTrue("Case is not in database", caseInDb.isPresent());
 
         caseInDb.ifPresent(aCase -> {

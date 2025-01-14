@@ -2,6 +2,7 @@ package behaviorTests.steps;
 
 import behaviorTests.CucumberSpringBootContext;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.*;
 import org.erpmicroservices.peopleandorganizations.api.rest.repositories.*;
 import org.junit.Assert;
@@ -83,4 +84,14 @@ public class PartySteps extends CucumberSpringBootContext {
                                 Assert.fail("Party type: " + partyTypeDescription + " was not created."));
     }
 
+    @Then("the party is in the database")
+    public void the_party_is_in_the_database() {
+        Assert.assertTrue("Not all parties exist in the database",
+                partyRepo.findAll().stream()
+                        .map(Party::getId)
+                        .toList()
+                        .containsAll(stepContext.parties.stream()
+                                .map(Party::getId)
+                                .toList()));
+    }
 }

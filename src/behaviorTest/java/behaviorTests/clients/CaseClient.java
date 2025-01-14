@@ -195,4 +195,8 @@ public class CaseClient {
     public ResponseEntity<CaseRoleCollectionEntityModel> getCaseRolesFromCase(Case expectedCase) {
         return template.getForEntity(casesUrl() + "/" + expectedCase.getId() + "/roles", CaseRoleCollectionEntityModel.class, params);
     }
+
+    public void deleteCaseRole(CaseRole caseRole) {
+        template.delete(caseRolesUrl() + "/" + caseRole.getId());
+    }
 }
