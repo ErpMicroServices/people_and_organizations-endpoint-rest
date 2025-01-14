@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +37,8 @@ public class StepContext {
     public ResponseEntity<Void> actualResponseEntityVoid;
     public List<CaseRoleType> caseRoleTypes = new ArrayList<>();
     public List<CommunicationEvent> expectedCommunicationEvents = new ArrayList<>();
+    public ResponseEntity<CaseRoleEntityModel> actualCaseRole;
+    public LocalDate expectedCaseRoleFromDate;
 
     public StepContext() {
     }

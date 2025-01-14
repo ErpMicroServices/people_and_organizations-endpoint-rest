@@ -54,11 +54,6 @@ public class CaseClient {
         });
     }
 
-    public void addCaseRoleToCase(Case kase, CaseRole caseRole) {
-        final HttpEntity<String> caseRoleEntityModelHttpEntity = convertCaseRoleToHttpStringEntity(caseRole);
-        template.postForEntity(caseRolesUrl(), caseRoleEntityModelHttpEntity, CaseRoleEntityModel.class);
-    }
-
     public ResponseEntity<CaseEntityModel> findCaseById(UUID id) {
 
         return template.getForEntity(casesUrl() + "/" + id.toString(), CaseEntityModel.class, params);
@@ -67,6 +62,19 @@ public class CaseClient {
     public ResponseEntity<CaseEntityModel> update(Case expectedCase) {
         template.put(casesUrl() + "/" + Objects.requireNonNull(expectedCase.getId()), convertCaseToHttpStringEntity(expectedCase));
         return findCaseById(expectedCase.getId());
+    }
+
+    public ResponseEntity<CaseRoleEntityModel> addCaseRoleToCase(CaseRole caseRole) {
+        final HttpEntity<String> caseRoleEntityModelHttpEntity = convertCaseRoleToHttpStringEntity(caseRole);
+        return template.postForEntity(caseRolesUrl(), caseRoleEntityModelHttpEntity, CaseRoleEntityModel.class);
+    }
+
+    public ResponseEntity<CaseRoleEntityModel> updateCaseRole(CaseRole caseRole) {
+        final HttpEntity<String> caseRoleEntityModelHttpEntity = convertCaseRoleToHttpStringEntity(caseRole);
+        return template.exchange(caseRolesUrl() + "/" + caseRole.getId()
+                , HttpMethod.PUT
+                , caseRoleEntityModelHttpEntity
+                , CaseRoleEntityModel.class);
     }
 
     public ResponseEntity<Void> delete(Case caseToDelete) {
@@ -167,12 +175,16 @@ public class CaseClient {
     private HttpEntity<String> convertCaseRoleToHttpStringEntity(CaseRole caseRole) {
         String stupidJson = """
                   {
-                 "fromDate": "2024-11-01",
+                 "fromDate": "%s",
+                 "thruDate": "%s",
                  "type": "http://localhost:8080/caseRoleTypes/%s",
                  "party": "http://localhost:8080/parties/%s",
                  "kase": "http://localhost:8080/cases/%s"
                 }
-                """.formatted(caseRole.getType().getId(),
+                """.formatted(
+                caseRole.getFromDate(),
+                caseRole.getThruDate()==null?"":caseRole.getThruDate(),
+                caseRole.getType().getId(),
                 caseRole.getParty().getId(),
                 caseRole.getKase().getId());
         HttpHeaders headers = new HttpHeaders();

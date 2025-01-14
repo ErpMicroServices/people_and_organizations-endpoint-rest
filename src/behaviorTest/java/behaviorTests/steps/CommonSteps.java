@@ -62,17 +62,17 @@ public class CommonSteps extends CucumberSpringBootContext {
                 .forEach(row -> {
                     switch (row.get(0)) {
                         case "case" -> {
-                            final CaseType caseType = caseTypeRepo.save(CaseType.builder()
-                                    .description(row.get(1))
-                                    .build()
-                            );
-                            stepContext.caseTypes.add(caseType);
+                            stepContext
+                                    .caseTypes.add(caseTypeRepo.save(CaseType.builder()
+                                            .description(row.get(1))
+                                            .build()
+                                    ));
                         }
                         case "case role" -> {
-                            final CaseRoleType caseRoleType = caseRoleTypeRepo.save(CaseRoleType.builder()
-                                    .description(row.get(1))
-                                    .build());
-                            stepContext.caseRoleTypes.add(caseRoleType);
+                            stepContext
+                                    .caseRoleTypes.add(caseRoleTypeRepo.save(CaseRoleType.builder()
+                                            .description(row.get(1))
+                                            .build()));
                         }
                         case "case status" -> {
                             final CaseStatusType caseStatusType = caseStatusTypeRepo.save(CaseStatusType.builder()
@@ -81,44 +81,46 @@ public class CommonSteps extends CucumberSpringBootContext {
                             );
                             stepContext.caseStatusTypes.add(caseStatusType);
                         }
-                        case "party" -> stepContext.partyTypes.add(partyTypeRepo.save(PartyType.builder()
-                                .description(row.get(1))
-                                .build()));
-                        case "communication event" ->
-                                stepContext.communicationEventTypes.add(communicationEventTypeRepo.save(CommunicationEventType.builder()
+                        case "party" -> stepContext
+                                .partyTypes.add(partyTypeRepo.save(PartyType.builder()
                                         .description(row.get(1))
                                         .build()));
-                        case "communication event role" ->
-                                stepContext.communicationEventRoleTypes.add(communicationEventRoleTypeRepo.save(CommunicationEventRoleType.builder()
+                        case "communication event" -> stepContext
+                                .communicationEventTypes.add(communicationEventTypeRepo.save(CommunicationEventType.builder()
                                         .description(row.get(1))
                                         .build()));
-                        case "communication event status" ->
-                                stepContext.communicationEventStatusTypes.add(communicationEventStatusTypeRepo.save(CommunicationEventStatusType.builder()
+                        case "communication event role" -> stepContext
+                                .communicationEventRoleTypes.add(communicationEventRoleTypeRepo.save(CommunicationEventRoleType.builder()
                                         .description(row.get(1))
                                         .build()));
-                        case "contact mechanism" ->
-                                stepContext.contactMechanismTypes.add(contactMechanismTypeRepo.save(ContactMechanismType.builder()
+                        case "communication event status" -> stepContext
+                                .communicationEventStatusTypes.add(communicationEventStatusTypeRepo.save(CommunicationEventStatusType.builder()
                                         .description(row.get(1))
                                         .build()));
-
-                        case "party role" ->
-                                stepContext.partyRoleTypes.add(partyRoleTypeRepo.save(PartyRoleType.builder()
+                        case "contact mechanism" -> stepContext
+                                .contactMechanismTypes.add(contactMechanismTypeRepo.save(ContactMechanismType.builder()
                                         .description(row.get(1))
                                         .build()));
 
-                        case "party relationship" ->
-                                stepContext.partyRelationshipTypes.add(partyRelationshipTypeRepo.save(PartyRelationshipType.builder()
+                        case "party role" -> stepContext
+                                .partyRoleTypes.add(partyRoleTypeRepo.save(PartyRoleType.builder()
                                         .description(row.get(1))
                                         .build()));
 
-                        case "party relationship status" ->
-                                stepContext.partyRelationshipStatusTypes.add(partyRelationshipStatusTypeRepo.save(PartyRelationshipStatusType.builder()
+                        case "party relationship" -> stepContext
+                                .partyRelationshipTypes.add(partyRelationshipTypeRepo.save(PartyRelationshipType.builder()
                                         .description(row.get(1))
                                         .build()));
 
-                        case "priority" -> stepContext.priorityTypes.add(priorityTypeRepo.save(PriorityType.builder()
-                                .description(row.get(1))
-                                .build()));
+                        case "party relationship status" -> stepContext
+                                .partyRelationshipStatusTypes.add(partyRelationshipStatusTypeRepo.save(PartyRelationshipStatusType.builder()
+                                        .description(row.get(1))
+                                        .build()));
+
+                        case "priority" -> stepContext
+                                .priorityTypes.add(priorityTypeRepo.save(PriorityType.builder()
+                                        .description(row.get(1))
+                                        .build()));
 
                         default -> fail("Unknown type: " + row);
 

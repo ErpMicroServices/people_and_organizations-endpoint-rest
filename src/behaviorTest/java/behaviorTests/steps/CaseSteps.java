@@ -4,7 +4,6 @@ import behaviorTests.CucumberSpringBootContext;
 import behaviorTests.clients.CaseClient;
 import behaviorTests.models.CaseCollectionEntityModel;
 import behaviorTests.models.CaseEntityModel;
-import io.cucumber.java.PendingException;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -76,6 +75,23 @@ public class CaseSteps extends CucumberSpringBootContext {
         stepContext.expectedCase.setCaseStatus(stepContext.caseStatusTypes.getFirst());
         stepContext.expectedCase.setType(stepContext.caseTypes.getFirst());
         stepContext.expectedCase = caseRepo.save(stepContext.expectedCase);
+    }
+
+    @Given("a party with case role {string} has been added to the case")
+    public void a_party_with_case_role_has_been_added_to_the_case(String caseRoleDescription) {
+
+        stepContext.expectedCase.addRole(caseRoleRepo
+                .save(CaseRole.builder()
+                        .kase(stepContext.expectedCase)
+                        .fromDate(LocalDate.now())
+                        .party(stepContext.parties.getFirst())
+                        .type(stepContext
+                                .caseRoleTypes.stream()
+                                .filter(crt ->
+                                        crt.getDescription().equals(caseRoleDescription))
+                                .findFirst()
+                                .orElseThrow())
+                        .build()));
     }
 
     @When("I save the case")
@@ -153,7 +169,17 @@ public class CaseSteps extends CucumberSpringBootContext {
                 .type(caseRoleTypes.stream().toList().get(0))
                 .build();
         stepContext.expectedCase.addRole(caseRole);
-        caseClient.addCaseRoleToCase(stepContext.expectedCase, caseRole);
+        caseClient.addCaseRoleToCase(caseRole);
+    }
+
+    @When("I change the from date in the role")
+    public void i_change_the_from_date_in_the_role() {
+        final CaseRole caseRole = stepContext.expectedCase.getRoles().stream()
+                .findFirst()
+                .orElseThrow();
+        stepContext.expectedCaseRoleFromDate = LocalDate.of(2025,01,01);
+        caseRole.setFromDate( stepContext.expectedCaseRoleFromDate);
+        stepContext.actualCaseRole = caseClient.updateCaseRole(caseRole);
     }
 
     @Then("the operation was successful")
@@ -244,6 +270,12 @@ public class CaseSteps extends CucumberSpringBootContext {
                 roleCount
                 , actualNumberOfCaseRolesOfTypeInExpectedCase(caseRoleTypeDescription)
         );
+    }
+
+    @Then("the role from date is correct")
+    public void the_role_from_date_is_correct() {
+        Assert.assertTrue("The from date is not correct."
+                , stepContext.actualCaseRole.getBody().getContent().getFromDate().isEqual(stepContext.expectedCaseRoleFromDate));
     }
 
     public long actualNumberOfCaseRolesOfTypeInExpectedCase(String caseRoleTypeDescription) {
