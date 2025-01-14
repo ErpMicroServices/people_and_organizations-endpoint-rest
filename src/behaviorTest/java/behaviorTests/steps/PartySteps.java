@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 
 public class PartySteps extends CucumberSpringBootContext {
 
@@ -87,9 +88,9 @@ public class PartySteps extends CucumberSpringBootContext {
     @Then("the party is in the database")
     public void the_party_is_in_the_database() {
         Assert.assertTrue("Not all parties exist in the database",
-                partyRepo.findAll().stream()
+                new HashSet<>(partyRepo.findAll().stream()
                         .map(Party::getId)
-                        .toList()
+                        .toList())
                         .containsAll(stepContext.parties.stream()
                                 .map(Party::getId)
                                 .toList()));
