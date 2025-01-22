@@ -7,7 +7,7 @@ plugins {
 group = 'org.erpmicroservices.people_and_organizations.endpoint.rest'
 version = '1.0.1-SNAPSHOT'
 description = 'People and Organizations Service Restful Endpoint'
-java.sourceCompatibility = JavaVersion.VERSION_20
+java.sourceCompatibility = JavaVersion.VERSION_21
 
 sourceSets {
     behaviorTest {
