@@ -34,7 +34,9 @@ logging:
   level:
     ROOT: INFO
     org:
-      springframework: DEBUG
+      springframework:
+        web:
+          client: DEBUG
 
 
 ---

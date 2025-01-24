@@ -1,4 +1,4 @@
-package behaviorTests.clients;
+package behaviorTests.models;
 
 import org.erpmicroservices.peopleandorganizations.api.rest.models.CommunicationEvent;
 import org.springframework.hateoas.EntityModel;

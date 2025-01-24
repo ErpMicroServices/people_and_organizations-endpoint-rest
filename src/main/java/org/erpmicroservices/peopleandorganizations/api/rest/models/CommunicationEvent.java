@@ -20,12 +20,10 @@ import java.util.UUID;
 public class CommunicationEvent extends AbstractPersistable<UUID> {
  @Column(name = "started", columnDefinition = "DATE")
  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
- @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
  private ZonedDateTime started;
 
  @Column(name = "ended", columnDefinition = "DATE")
  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
- @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
  private ZonedDateTime ended;
 
  private String note;

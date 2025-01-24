@@ -14,23 +14,10 @@ import java.util.*;
 
 @Lazy
 @Component
-public class CaseClient {
-    protected final RestTemplate template;
-    private final Map<String, String> params;
-    private final StepContext stepContext;
+public class CaseClient extends BaseHATEOASClient {
 
     public CaseClient(RestTemplate RestTemplate, StepContext stepContext) {
-        this.template = RestTemplate;
-        params = new HashMap<>();
-        int offset = 0;
-        int limit = 10;
-        params.put("page", String.valueOf(offset / limit));
-        params.put("size", String.valueOf(limit));
-        this.stepContext = stepContext;
-    }
-
-    private String url() {
-        return "http://localhost:8080";
+        super(RestTemplate, stepContext);
     }
 
     private String casesUrl() {
@@ -138,12 +125,6 @@ public class CaseClient {
             }
         }
         return Optional.empty();
-    }
-
-    public @NotNull UUID getIdFromEntity(EntityModel<?> aCaseEntity) {
-        final String self = aCaseEntity.getLinks("self").stream().findFirst().orElseThrow().getHref();
-        final String selfId = self.substring(self.lastIndexOf('/') + 1);
-        return UUID.fromString(selfId);
     }
 
     private static @NotNull HttpEntity<String> convertCaseToHttpStringEntity(Case caseToSave) {
