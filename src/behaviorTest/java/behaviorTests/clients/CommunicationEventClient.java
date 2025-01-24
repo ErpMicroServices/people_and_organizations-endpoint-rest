@@ -12,8 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.stream.Collectors;
 
 @Lazy
@@ -24,14 +26,14 @@ public class CommunicationEventClient extends BaseHATEOASClient {
         super(RestTemplate, stepContext);
     }
 
-    protected URI communicationEventUrl() throws URISyntaxException {
-        return (new URI(url())).resolve("communicationEvents");
+    protected URI communicationEventUrl() throws MalformedURLException {
+        return url().resolve("/communicationEvents");
     }
 
     public ResponseEntity<CommunicationEventEntityModel> create(CommunicationEvent communicationEvent) {
         try {
-            return template.postForEntity(communicationEventUrl(), convertCommunicationEventToHttpStringEntity(communicationEvent), CommunicationEventEntityModel.class);
-        } catch (URISyntaxException e) {
+            return template.postForEntity(communicationEventUrl().toString(), convertCommunicationEventToHttpStringEntity(communicationEvent), CommunicationEventEntityModel.class);
+        } catch (MalformedURLException e) {
             Assert.fail(e.getMessage());
             return null;
         }

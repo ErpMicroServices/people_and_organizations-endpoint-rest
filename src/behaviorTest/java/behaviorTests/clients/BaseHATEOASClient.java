@@ -5,6 +5,9 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -24,8 +27,8 @@ public class BaseHATEOASClient {
         params.put("size", String.valueOf(limit));
     }
 
-    protected String url() {
-        return "http://localhost:8080";
+    protected URI url() {
+        return URI.create("http://localhost:8080");
     }
 
     public @NotNull UUID getIdFromEntity(EntityModel<?> aCaseEntity) {

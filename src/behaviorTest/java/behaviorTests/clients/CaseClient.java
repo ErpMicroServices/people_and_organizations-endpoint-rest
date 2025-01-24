@@ -10,7 +10,10 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.net.URI;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 @Lazy
 @Component
@@ -20,13 +23,13 @@ public class CaseClient extends BaseHATEOASClient {
         super(RestTemplate, stepContext);
     }
 
-    private String casesUrl() {
+    private URI casesUrl() {
 
-        return url() + "/cases";
+        return url().resolve("/cases");
     }
 
-    private String caseRolesUrl() {
-        return url() + "/caseRoles";
+    private URI caseRolesUrl() {
+        return url().resolve("/caseRoles");
     }
 
     public ResponseEntity<CaseEntityModel> save(Case caseToSave) {
@@ -71,7 +74,7 @@ public class CaseClient extends BaseHATEOASClient {
 
     public @NotNull ResponseEntity<CaseCollectionEntityModel> getCaseCollectionEntityModelResponseEntity() {
         return template
-                .getForEntity(casesUrl(), CaseCollectionEntityModel.class, params);
+                .getForEntity(casesUrl().toString(), CaseCollectionEntityModel.class, params);
     }
 
     public Optional<CaseStatusType> getCaseStatusTypeFromEntity(EntityModel<Case> aCaseEntity) {
@@ -164,7 +167,7 @@ public class CaseClient extends BaseHATEOASClient {
                 }
                 """.formatted(
                 caseRole.getFromDate(),
-                caseRole.getThruDate()==null?"":caseRole.getThruDate(),
+                caseRole.getThruDate() == null ? "" : caseRole.getThruDate(),
                 caseRole.getType().getId(),
                 caseRole.getParty().getId(),
                 caseRole.getKase().getId());
