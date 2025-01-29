@@ -30,10 +30,7 @@ public class CommunicationEventClient extends BaseHATEOASClient {
     }
 
     protected UriComponentsBuilder communicationEventUrl() throws MalformedURLException {
-        return UriComponentsBuilder.newInstance()
-                .scheme("http")
-                .host("localhost")
-                .port("8080")
+        return url()
                 .pathSegment("communicationEvents");
     }
 
@@ -59,9 +56,9 @@ public class CommunicationEventClient extends BaseHATEOASClient {
                     .queryParam("startedThru", "{thruTimestamp}")
                     .query(paginationStringTemplate)
                     .build(false)
-                    ;//.toUri();
+                    ;
 
-//"http://localhost:8080/communicationEvents/search/findCommunicationEventsByEndedBetweenOrStartedBetween?endedFrom={fromTimestamp}&endedThru={thruTimestamp}&startedFrom={fromTimestamp}&startedThru={thruTimestamp}&page={page}&size={size}"//.toString().replaceAll("\\+", "%2B")
+
             return template.getForEntity(uri.toString()
                     , CommunicationEventCollectionEntityModel.class
                     , params

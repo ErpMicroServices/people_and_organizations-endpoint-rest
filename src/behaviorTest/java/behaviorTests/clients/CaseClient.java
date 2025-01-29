@@ -25,11 +25,11 @@ public class CaseClient extends BaseHATEOASClient {
 
     private URI casesUrl() {
 
-        return url().resolve("/cases");
+        return url().pathSegment("cases").build().toUri();
     }
 
     private URI caseRolesUrl() {
-        return url().resolve("/caseRoles");
+        return url().pathSegment("caseRoles").build().toUri();
     }
 
     public ResponseEntity<CaseEntityModel> save(Case caseToSave) {
