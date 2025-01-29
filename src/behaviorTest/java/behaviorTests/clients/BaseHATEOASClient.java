@@ -14,8 +14,9 @@ import java.util.UUID;
 
 public class BaseHATEOASClient {
     protected final RestTemplate template;
-    protected final Map<String, String> params;
+    protected final Map<String, Object> params;
     protected final StepContext stepContext;
+    protected final String paginationStringTemplate = "page={page}&size={size}";
 
     public BaseHATEOASClient(RestTemplate RestTemplate, StepContext stepContext) {
         this.template = RestTemplate;
@@ -28,7 +29,7 @@ public class BaseHATEOASClient {
     }
 
     protected URI url() {
-        return URI.create("http://localhost:8080");
+        return URI.create("http://localhost:8080/");
     }
 
     public @NotNull UUID getIdFromEntity(EntityModel<?> aCaseEntity) {

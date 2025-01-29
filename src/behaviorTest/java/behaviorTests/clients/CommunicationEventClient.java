@@ -1,5 +1,6 @@
 package behaviorTests.clients;
 
+import behaviorTests.models.CommunicationEventCollectionEntityModel;
 import behaviorTests.models.CommunicationEventEntityModel;
 import behaviorTests.steps.StepContext;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.CommunicationEvent;
@@ -10,12 +11,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.time.ZonedDateTime;
 import java.util.stream.Collectors;
 
 @Lazy
@@ -26,13 +29,43 @@ public class CommunicationEventClient extends BaseHATEOASClient {
         super(RestTemplate, stepContext);
     }
 
-    protected URI communicationEventUrl() throws MalformedURLException {
-        return url().resolve("/communicationEvents");
+    protected UriComponentsBuilder communicationEventUrl() throws MalformedURLException {
+        return UriComponentsBuilder.newInstance()
+                .scheme("http")
+                .host("localhost")
+                .port("8080")
+                .pathSegment("communicationEvents");
     }
 
     public ResponseEntity<CommunicationEventEntityModel> create(CommunicationEvent communicationEvent) {
         try {
-            return template.postForEntity(communicationEventUrl().toString(), convertCommunicationEventToHttpStringEntity(communicationEvent), CommunicationEventEntityModel.class);
+            return template.postForEntity(communicationEventUrl().build(false).toString().replaceAll("/+$", ""), convertCommunicationEventToHttpStringEntity(communicationEvent), CommunicationEventEntityModel.class);
+        } catch (MalformedURLException e) {
+            Assert.fail(e.getMessage());
+            return null;
+        }
+    }
+
+    public ResponseEntity<CommunicationEventCollectionEntityModel> findAllEventsBetween(ZonedDateTime fromTimestamp, ZonedDateTime thruTimestamp) {
+        try {
+            params.put("fromTimestamp", fromTimestamp);//.toString().replaceAll("\\+", "%2B"));
+            params.put("thruTimestamp", thruTimestamp);//.toString().replaceAll("\\+", "%2B"));
+            UriComponents uri =communicationEventUrl()
+                    .pathSegment("search")
+                    .pathSegment("findCommunicationEventsByEndedBetweenOrStartedBetween")
+                    .queryParam("endedFrom", "{fromTimestamp}")
+                    .queryParam("endedThru", "{thruTimestamp}")
+                    .queryParam("startedFrom", "{fromTimestamp}")
+                    .queryParam("startedThru", "{thruTimestamp}")
+                    .query(paginationStringTemplate)
+                    .build(false)
+                    ;//.toUri();
+
+//"http://localhost:8080/communicationEvents/search/findCommunicationEventsByEndedBetweenOrStartedBetween?endedFrom={fromTimestamp}&endedThru={thruTimestamp}&startedFrom={fromTimestamp}&startedThru={thruTimestamp}&page={page}&size={size}"//.toString().replaceAll("\\+", "%2B")
+            return template.getForEntity(uri.toString()
+                    , CommunicationEventCollectionEntityModel.class
+                    , params
+            );
         } catch (MalformedURLException e) {
             Assert.fail(e.getMessage());
             return null;
@@ -75,4 +108,6 @@ public class CommunicationEventClient extends BaseHATEOASClient {
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new HttpEntity<>(stupidJson, headers);
     }
+
+
 }

@@ -15,6 +15,7 @@ import org.springframework.hateoas.mediatype.hal.Jackson2HalModule;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.List;
 
 @Lazy
@@ -35,7 +36,10 @@ public class TestRestTemplateConfig {
         mappingJackson2HttpMessageConverter.setSupportedMediaTypes(List.of(MediaTypes.HAL_JSON));
         mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);
         builder.messageConverters(mappingJackson2HttpMessageConverter);
-        return builder.build();
+//        builder.interceptors(new UriEncodingInterceptor());
+        final RestTemplate restTemplate = builder.build();
+        restTemplate.setInterceptors(Collections.singletonList(new UriEncodingInterceptor()));
+        return restTemplate;
     }
 
 }

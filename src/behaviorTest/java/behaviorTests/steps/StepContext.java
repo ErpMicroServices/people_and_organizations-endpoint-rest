@@ -2,6 +2,7 @@ package behaviorTests.steps;
 
 import behaviorTests.models.CaseEntityModel;
 import behaviorTests.models.CaseRoleEntityModel;
+import behaviorTests.models.CommunicationEventCollectionEntityModel;
 import behaviorTests.models.CommunicationEventEntityModel;
 import io.cucumber.spring.ScenarioScope;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.*;
@@ -42,6 +43,7 @@ public class StepContext {
     public LocalDate expectedCaseRoleFromDate;
     public CommunicationEvent.CommunicationEventBuilder communicatoinEventBuilder;
     public ResponseEntity<CommunicationEventEntityModel> actualCommunicationEventEntityModel;
+    public ResponseEntity<CommunicationEventCollectionEntityModel> actualCommunicationEventListEntityModel;
 
     public StepContext() {
     }

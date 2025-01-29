@@ -108,6 +108,18 @@ public class CommunicationEventSteps extends CucumberSpringBootContext {
         stepContext.communicatoinEventBuilder.ended(ZonedDateTime.parse(date + "T" + time));
     }
 
+    @Given("the communication event is in the database")
+    public void the_communication_event_is_in_the_database() {
+        final CommunicationEvent communicationEvent = stepContext.communicatoinEventBuilder.build();
+        final CommunicationEvent saved = communicationEventRepo.save(communicationEvent);
+        stepContext.expectedCommunicationEvents.add(saved);
+    }
+    @When("I search for communication events that occurred between {string} and {string} on {string}")
+    public void i_search_for_communication_events_that_occurred_between_and_on(String fromTime, String thruTime, String date) {
+        ZonedDateTime fromTimestamp = ZonedDateTime.parse(date + "T" + fromTime);
+        ZonedDateTime thruTimestamp = ZonedDateTime.parse(date + "T" + thruTime);
+        stepContext.actualCommunicationEventListEntityModel = communicationEventClient.findAllEventsBetween( fromTimestamp, thruTimestamp);
+    }
 
     @When("I create a communication event")
     public void i_create_a_communication_event() {
@@ -124,6 +136,17 @@ public class CommunicationEventSteps extends CucumberSpringBootContext {
         Assert.assertNotNull("Actual communication event entity model body is null, and shouldn't be", stepContext.actualCommunicationEventEntityModel.getBody());
         final Optional<CommunicationEvent> communicationEvent = communicationEventRepo.findById(communicationEventClient.getIdFromEntity(stepContext.actualCommunicationEventEntityModel.getBody()));
         Assert.assertTrue("Expected the communication event to be in the database.", communicationEvent.isPresent());
+    }
+
+    @Then("the communication event of type {string} is found")
+    public void the_communication_event_of_type_is_found(String string) {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
+    @Then("the communication event of type {string} is not found")
+    public void the_communication_event_of_type_is_not_found(String string) {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
     }
 
 }
