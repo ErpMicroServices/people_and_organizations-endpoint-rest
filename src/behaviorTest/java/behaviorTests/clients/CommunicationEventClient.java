@@ -2,6 +2,7 @@ package behaviorTests.clients;
 
 import behaviorTests.models.CommunicationEventCollectionEntityModel;
 import behaviorTests.models.CommunicationEventEntityModel;
+import behaviorTests.models.CommunicationEventTypeEntityModel;
 import behaviorTests.steps.StepContext;
 import org.erpmicroservices.peopleandorganizations.api.rest.models.CommunicationEvent;
 import org.junit.Assert;
@@ -11,14 +12,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Lazy
@@ -47,7 +48,7 @@ public class CommunicationEventClient extends BaseHATEOASClient {
         try {
             params.put("fromTimestamp", fromTimestamp);
             params.put("thruTimestamp", thruTimestamp);
-            UriComponents uri =communicationEventUrl()
+            UriComponents uri = communicationEventUrl()
                     .pathSegment("search")
                     .pathSegment("findCommunicationEventsByEndedBetweenOrStartedBetween")
                     .queryParam("endedFrom", "{fromTimestamp}")
@@ -106,4 +107,18 @@ public class CommunicationEventClient extends BaseHATEOASClient {
     }
 
 
+    public List<ResponseEntity<CommunicationEventTypeEntityModel>> getTypesForAll(ResponseEntity<CommunicationEventCollectionEntityModel> communicationEventListEntityModel) {
+        return Objects.requireNonNull(communicationEventListEntityModel
+                        .getBody())
+                .getContent()
+                .parallelStream()
+                .map(model ->
+                        template.getForEntity(model.getLink("type").stream()
+                                .findFirst()
+                                .orElseThrow(() -> new RuntimeException("Could not find type link"))
+                                .getHref(), CommunicationEventTypeEntityModel.class))
+                .toList();
+
+
+    }
 }
