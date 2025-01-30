@@ -1,16 +1,9 @@
 spring:
   application:
     name: People and Organizations Endpoint REST
-  datasource:
-    url: jdbc:postgresql://localhost:5432/people_and_organizations
-    username: people_and_organizations
-    password: people_and_organizations
-    driver-class-name: org.postgresql.Driver
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
-    hibernate:
-      ddl-auto: validate
     database: postgresql
 
 management:
@@ -19,10 +12,34 @@ management:
       exposure:
         include: health,metrics,info
 
+---
+
+spring:
+  config:
+    activate:
+      on-profile: development
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    url: jdbc:postgresql://localhost:5432/people_and_organizations
+    username: people_and_organizations
+    password: people_and_organizations
+    driver-class-name: org.postgresql.Driver
+
 logging:
   level:
     ROOT: INFO
-    org.springframework.data.repository: INFO
-    org.hibernate: INFO
+    org:
+      springframework: DEBUG
+
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: docker
 
 

@@ -1,11 +1,24 @@
 version: '3'
 services:
+#  authorization_service-db:
+#    image: erpmicroservices/authorization_server-database:latest
+#    ports:
+#      - "5433:5432"
+#    volumes:
+#      - "authorization_service-db-data:/var/lib/postgresql/data"
+
   database:
     image: erpmicroservices/people_and_organizations-database:latest
     ports:
       - "5432:5432"
     volumes:
-      - "dbdata:/var/lib/postgresql/data"
+      - "people_and_organizations-database-data:/var/lib/postgresql/data"
+
+#  authorization_server:
+#    image: erpmicroservices/authorization_server:latest
+#    ports:
+#      - "80:9090"
 
 volumes:
-  dbdata:
+  authorization_service-db-data:
+  people_and_organizations-database-data:

@@ -15,4 +15,8 @@ public interface CaseRoleTypeRepo extends JpaRepository<CaseRoleType, UUID> {
 	Page<CaseRoleType> findByParentIsNull(Pageable pageable);
 
 	Page<CaseRoleType> findByDescriptionContaining(String description, Pageable pageable);
+
+	Page<CaseRoleType> findCaseRoleTypeByParentIdIsNotNull(final Pageable pageable);
+
+	Page<CaseRoleType> findCaseStatusTypeByParentIdIsNotNull(final Pageable pageable);
 }

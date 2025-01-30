@@ -9,4 +9,5 @@ import java.util.UUID;
 @RepositoryRestResource
 public interface PriorityTypeRepo extends JpaRepository<PriorityType, UUID> {
 
+    PriorityType findByDescription(String priorityTypeDescription);
 }

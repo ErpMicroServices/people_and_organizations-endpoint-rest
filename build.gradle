@@ -7,12 +7,26 @@ plugins {
 group = 'org.erpmicroservices.people_and_organizations.endpoint.rest'
 version = '1.0.1-SNAPSHOT'
 description = 'People and Organizations Service Restful Endpoint'
-java.sourceCompatibility = JavaVersion.VERSION_20
+java.sourceCompatibility = JavaVersion.VERSION_21
+
+sourceSets {
+    behaviorTest {
+        compileClasspath += sourceSets.main.output + sourceSets.test.output
+        runtimeClasspath += sourceSets.main.output + sourceSets.test.output
+    }
+    generated {
+        java {
+            srcDirs = ['build/generated/sources/annotationProcessor/java/main']
+        }
+    }
+}
 
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    behaviorTestTestImplementation.extendsFrom testImplementation
+    behaviorTestTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
 repositories {
@@ -20,16 +34,43 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    behaviorTestImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    behaviorTestImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
+    behaviorTestImplementation 'org.springframework:spring-webflux'
+    behaviorTestImplementation 'org.springframework.boot:spring-boot-starter-actuator'
+    behaviorTestImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    behaviorTestImplementation 'org.springframework.boot:spring-boot-starter-hateoas'
+    behaviorTestImplementation 'org.springframework.boot:spring-boot-starter-test'
+    behaviorTestImplementation 'org.springframework.boot:spring-boot-starter-validation'
+    behaviorTestImplementation 'org.springframework.boot:spring-boot-starter-web'
+    behaviorTestImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+    behaviorTestImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    behaviorTestImplementation 'jakarta.servlet:jakarta.servlet-api:6.1.0'
+    behaviorTestImplementation 'io.cucumber:cucumber-java:7.18.0'
+    behaviorTestImplementation 'io.cucumber:cucumber-junit:7.18.1'
+    behaviorTestImplementation 'io.cucumber:cucumber-spring:7.18.1'
+    behaviorTestImplementation 'org.junit.vintage:junit-vintage-engine:5.10.3'
+    behaviorTestImplementation 'org.junit.jupiter:junit-jupiter:5.10.3'
+    behaviorTestImplementation "org.testcontainers:testcontainers:1.20.0"
+    behaviorTestImplementation 'org.testcontainers:junit-jupiter:1.20.0'
+    behaviorTestImplementation 'org.testcontainers:postgresql:1.20.0'
+    behaviorTestImplementation 'org.postgresql:postgresql'
+    behaviorTestImplementation 'com.querydsl:querydsl-apt:5.1.0:jakarta'
 }
 
 
@@ -40,3 +81,22 @@ tasks.named('test') {
 ext {
     set("jakarta-servlet.version", '5.0.0')
 }
+
+tasks.register('behaviorTest', Test) {
+
+    description = 'Runs Behavior tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.behaviorTest.output.classesDirs
+    classpath = sourceSets.behaviorTest.runtimeClasspath
+    dependsOn assemble
+    shouldRunAfter test
+
+    useJUnitPlatform()
+
+    testLogging {
+        events "passed"
+    }
+}
+
+check.dependsOn behaviorTest
