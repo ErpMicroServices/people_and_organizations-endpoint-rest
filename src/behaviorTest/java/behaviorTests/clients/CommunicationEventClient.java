@@ -45,8 +45,8 @@ public class CommunicationEventClient extends BaseHATEOASClient {
 
     public ResponseEntity<CommunicationEventCollectionEntityModel> findAllEventsBetween(ZonedDateTime fromTimestamp, ZonedDateTime thruTimestamp) {
         try {
-            params.put("fromTimestamp", fromTimestamp);//.toString().replaceAll("\\+", "%2B"));
-            params.put("thruTimestamp", thruTimestamp);//.toString().replaceAll("\\+", "%2B"));
+            params.put("fromTimestamp", fromTimestamp);
+            params.put("thruTimestamp", thruTimestamp);
             UriComponents uri =communicationEventUrl()
                     .pathSegment("search")
                     .pathSegment("findCommunicationEventsByEndedBetweenOrStartedBetween")
@@ -55,8 +55,7 @@ public class CommunicationEventClient extends BaseHATEOASClient {
                     .queryParam("startedFrom", "{fromTimestamp}")
                     .queryParam("startedThru", "{thruTimestamp}")
                     .query(paginationStringTemplate)
-                    .build(false)
-                    ;
+                    .build(false);
 
 
             return template.getForEntity(uri.toString()
