@@ -1,5 +1,9 @@
-version: '3'
 services:
+  config:
+    image: erpmicroservices/configuration-server:latest
+    ports:
+      - "8888:8888"
+
 #  authorization_service-db:
 #    image: erpmicroservices/authorization_server-database:latest
 #    ports:

@@ -9,6 +9,10 @@ version = '1.0.1-SNAPSHOT'
 description = 'People and Organizations Service Restful Endpoint'
 java.sourceCompatibility = JavaVersion.VERSION_21
 
+ext {
+    set('springCloudVersion', "2023.0.1")
+}
+
 sourceSets {
     behaviorTest {
         compileClasspath += sourceSets.main.output + sourceSets.test.output
@@ -33,6 +37,12 @@ repositories {
     mavenCentral()
 }
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
 dependencies {
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
@@ -42,13 +52,16 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
-
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
     compileOnly 'org.projectlombok:lombok'
+
     runtimeOnly 'org.postgresql:postgresql'
+
     annotationProcessor 'org.projectlombok:lombok'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
     behaviorTestImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     behaviorTestImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
     behaviorTestImplementation 'org.springframework:spring-webflux'
